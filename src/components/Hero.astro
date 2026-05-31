@@ -1,0 +1,189 @@
+---
+---
+
+<section id="hero" class="hero-section">
+  <!-- Interactive Ambient Glows -->
+  <div class="ambient-glow glow-hero-1"></div>
+  <div class="ambient-glow glow-hero-2"></div>
+
+  <div class="container hero-container">
+    <!-- Top Row: Giant Name & Right-Aligned Bio -->
+    <div class="hero-top-row">
+      <!-- Huge Condensed Headings -->
+      <h1 class="hero-name scroll-reveal">
+        <span class="first-name">AHNAF</span>
+        <span class="last-name gradient-text">BHAMAKERTI</span>
+      </h1>
+      
+      <!-- Mini Editorial Bio on the Right -->
+      <div class="hero-bio-container scroll-reveal" style="transition-delay: 0.15s;">
+        <p class="hero-mini-bio">
+          Working on frontend products using React, Next.js & Astro.js, crafting robust architectures with clean, pixel-perfect layouts.
+        </p>
+      </div>
+    </div>
+
+    <!-- Solid Divider Line -->
+    <div class="brutalist-divider scroll-reveal" style="transition-delay: 0.2s;"></div>
+
+    <!-- Bottom Row: Introduction Label & Call to Actions -->
+    <div class="hero-bottom-row scroll-reveal" style="transition-delay: 0.25s;">
+      <div class="intro-label">
+        <span class="index-num">01.</span>
+        <span class="label-text">INTRODUCTION</span>
+      </div>
+
+      <div class="hero-actions">
+        <a href="#projects" class="brutalist-btn accent">
+          <span>VIEW WORK</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+        <a href="#contact" class="brutalist-btn">
+          <span>GET IN TOUCH</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-section {
+    background-color: var(--bg-primary);
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+    position: relative;
+    border-bottom: 1.5px solid var(--color-border);
+    transition: background-color 0.5s ease;
+  }
+
+  /* Ambient Spheres */
+  .glow-hero-1 {
+    width: 320px;
+    height: 320px;
+    background-color: var(--color-accent);
+    top: 10%;
+    left: 20%;
+    filter: blur(100px);
+  }
+
+  .glow-hero-2 {
+    width: 280px;
+    height: 280px;
+    background-color: #38b2ac; /* Beautiful Teal */
+    bottom: 15%;
+    right: 15%;
+    filter: blur(90px);
+    animation-delay: -3s;
+  }
+
+  .hero-container {
+    display: flex;
+    flex-direction: column;
+    gap: 3.5rem;
+  }
+
+  /* Top Row styling */
+  .hero-top-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    align-items: flex-end;
+  }
+
+  /* Giant Brutalist Name Typography */
+  .hero-name {
+    font-size: clamp(4rem, 12vw, 8.5rem);
+    line-height: 0.85;
+    letter-spacing: -0.02em;
+    display: flex;
+    flex-direction: column;
+    color: var(--text-primary);
+  }
+
+  .first-name {
+    font-weight: 400;
+  }
+
+  .last-name {
+    font-weight: 400;
+  }
+
+  /* Bio Card on the Right */
+  .hero-bio-container {
+    display: flex;
+    justify-content: flex-start;
+    max-width: 320px;
+  }
+
+  .hero-mini-bio {
+    font-family: var(--font-subheading);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  /* Bottom Row styling */
+  .hero-bottom-row {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  /* Intro Section Label */
+  .intro-label {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-family: var(--font-subheading);
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+  }
+
+  .index-num {
+    color: var(--text-muted);
+  }
+
+  .label-text {
+    color: var(--text-primary);
+  }
+
+  /* Action Buttons */
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  /* Responsive screen adjustments */
+  @media (min-width: 768px) {
+    .hero-top-row {
+      grid-template-columns: 1.5fr 0.5fr;
+      gap: 3rem;
+    }
+    
+    .hero-bio-container {
+      justify-content: flex-end;
+      text-align: right;
+      margin-bottom: 0.8rem;
+    }
+
+    .hero-bottom-row {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .hero-actions {
+      width: auto;
+    }
+  }
+</style>

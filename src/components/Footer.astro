@@ -1,0 +1,130 @@
+---
+---
+
+<footer class="site-footer">
+  <!-- Divider Line -->
+  <div class="brutalist-divider"></div>
+
+  <div class="container footer-container">
+    
+    <!-- Left Info Credits -->
+    <div class="footer-left">
+      <p class="copyright">
+        &copy; {new Date().getFullYear()} <span class="owner">AHNAF BHAMAKERTI</span>. ALL RIGHTS RESERVED.
+      </p>
+      <p class="tech-credit">
+        BUILT WITH <a href="https://astro.build" target="_blank" rel="noopener noreferrer" class="footer-link">ASTROJS</a> &amp; VANILLA CSS.
+      </p>
+    </div>
+
+    <!-- Right: Back To Top trigger -->
+    <div class="footer-right">
+      <button id="scroll-to-top" class="back-to-top-btn" aria-label="Kembali ke atas">
+        <span>BACK TO TOP</span>
+        <span class="btn-arrow">&uarr;</span>
+      </button>
+    </div>
+
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background-color: var(--bg-primary);
+    padding-bottom: 3.5rem;
+    position: relative;
+    z-index: 10;
+    transition: background-color 0.4s ease;
+  }
+
+  .footer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    text-align: center;
+    padding-top: 2.5rem;
+  }
+
+  /* Left Credits styling */
+  .footer-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    font-family: var(--font-subheading);
+    letter-spacing: 0.05em;
+  }
+
+  .copyright {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .copyright .owner {
+    color: var(--text-primary);
+  }
+
+  .tech-credit {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+
+  .footer-link {
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
+  .footer-link:hover {
+    color: var(--text-primary);
+  }
+
+  /* Back to Top button brutalist text style */
+  .back-to-top-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-subheading);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition-fast);
+  }
+
+  .back-to-top-btn:hover {
+    color: var(--text-primary);
+    text-decoration: underline;
+  }
+
+  .btn-arrow {
+    font-size: 1.1rem;
+    transition: var(--transition-fast);
+  }
+
+  .back-to-top-btn:hover .btn-arrow {
+    transform: translateY(-2px);
+  }
+
+  /* Sizing adjustments */
+  @media (min-width: 768px) {
+    .footer-container {
+      flex-direction: row;
+      justify-content: space-between;
+      text-align: left;
+    }
+  }
+</style>
+
+<script>
+  const scrollToTopBtn = document.getElementById('scroll-to-top');
+
+  scrollToTopBtn?.addEventListener('click', () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+</script>

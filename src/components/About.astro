@@ -1,0 +1,218 @@
+---
+---
+
+<section id="about" class="about-section">
+  <!-- Subtle Background Glow -->
+  <div class="ambient-glow glow-about"></div>
+
+  <div class="container about-container">
+    
+    <!-- Left Column: Portrait Avatar Box with Frosted Glass Brutalism -->
+    <div class="about-visual scroll-reveal">
+      <div class="avatar-box brutalist-card">
+        <!-- SVG Avatar Silhouette (Premium Developer Icon) -->
+        <svg viewBox="0 0 100 100" class="avatar-svg" xmlns="http://www.w3.org/2000/svg">
+          <rect width="100" height="100" fill="var(--bg-secondary)"/>
+          <circle cx="50" cy="42" r="14" fill="var(--text-primary)" opacity="0.6"/>
+          <path d="M50 16 L43 24 L57 24 Z" fill="var(--text-primary)"/> <!-- Hat Top -->
+          <ellipse cx="50" cy="80" rx="26" ry="18" fill="var(--text-primary)" opacity="0.7"/>
+          <circle cx="50" cy="53" r="1.5" fill="var(--bg-primary)"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Right Column: Biography & Frosted Stats Grid -->
+    <div class="about-content scroll-reveal" style="transition-delay: 0.2s;">
+      <!-- Section Tag Header -->
+      <div class="about-header-split">
+        <span class="about-index">02 / STORY</span>
+        <h2 class="about-title gradient-text">ABOUT</h2>
+      </div>
+
+      <h3 class="about-subtitle">
+        FRONTEND DEV LEARNING THE FULL STACK.
+      </h3>
+      
+      <p class="about-desc">
+        Halo! Saya <strong>Ahnaf Bhamakerti</strong>, seorang pengembang frontend yang berdedikasi tinggi untuk mempelajari arsitektur full-stack secara mendalam. Saya memulai perjalanan belajar menggunakan Next.js dan React, dan sekarang mengeksplorasi optimasi performa modern menggunakan Astro.js.
+      </p>
+
+      <p class="about-desc">
+        Saya memiliki hasrat untuk menerjemahkan tata letak desain yang kompleks ke dalam kode web bersih yang responsif, berkecepatan tinggi, dan berorientasi pada detail terkecil.
+      </p>
+
+      <!-- Raw Bordered Stats Grid (Strictly divided by thin lines like reference screenshot) -->
+      <div class="about-stats-grid brutalist-card">
+        <div class="stat-cell border-bottom border-right">
+          <span class="stat-value gradient-text">1+</span>
+          <span class="stat-label">TAHUN BELAJAR</span>
+        </div>
+        <div class="stat-cell border-bottom">
+          <span class="stat-value gradient-text">15+</span>
+          <span class="stat-label">PROYEK DIBUAT</span>
+        </div>
+        <div class="stat-cell border-right">
+          <span class="stat-value gradient-text">HI</span>
+          <span class="stat-label">SAY HELLO!</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-value gradient-text">IDN</span>
+          <span class="stat-label">LOKASI / INDONESIA</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .about-section {
+    background-color: var(--bg-primary);
+    position: relative;
+    border-bottom: 1.5px solid var(--color-border);
+    transition: background-color 0.5s ease;
+  }
+
+  .glow-about {
+    width: 320px;
+    height: 320px;
+    background-color: var(--color-accent-glow);
+    top: 25%;
+    right: 5%;
+    filter: blur(80px);
+  }
+
+  .about-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3.5rem;
+    align-items: center;
+  }
+
+  /* Left Column Visual */
+  .about-visual {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .avatar-box {
+    width: 100%;
+    max-width: 380px;
+    aspect-ratio: 1;
+    padding: 0;
+    overflow: hidden;
+    background-color: var(--bg-secondary);
+    border: 1.5px solid var(--color-border);
+    box-shadow: 6px 6px 0px var(--color-border);
+  }
+
+  .avatar-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    transition: var(--transition-smooth);
+  }
+
+  .avatar-box:hover .avatar-svg {
+    transform: scale(1.05);
+  }
+
+  /* Right Column Content */
+  .about-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .about-header-split {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 1.5px solid var(--color-border);
+    padding-bottom: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .about-index {
+    font-family: var(--font-subheading);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+  }
+
+  .about-title {
+    font-size: 3rem;
+    line-height: 0.8;
+  }
+
+  .about-subtitle {
+    font-family: var(--font-subheading);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.01em;
+  }
+
+  .about-desc {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    margin-bottom: 1.2rem;
+  }
+
+  /* Frosted stats grid wrapper */
+  .about-stats-grid {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0; /* Align boundaries with card border */
+    border-radius: 0;
+    box-shadow: 4px 4px 0px var(--color-border);
+  }
+
+  .stat-cell {
+    padding: 1.8rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    transition: var(--transition-fast);
+  }
+
+  .stat-cell:hover {
+    background-color: rgba(18, 28, 21, 0.03);
+  }
+
+  .stat-cell.border-right {
+    border-right: 1.5px solid var(--color-border);
+  }
+
+  .stat-cell.border-bottom {
+    border-bottom: 1.5px solid var(--color-border);
+  }
+
+  .stat-value {
+    font-family: var(--font-subheading);
+    font-size: 2.2rem;
+    font-weight: 700;
+    line-height: 1.0;
+  }
+
+  .stat-label {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* Screen Size Queries */
+  @media (min-width: 992px) {
+    .about-container {
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 5rem;
+    }
+  }
+</style>

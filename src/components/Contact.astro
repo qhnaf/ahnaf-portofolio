@@ -1,0 +1,385 @@
+---
+---
+
+<section id="contact" class="contact-section">
+  <!-- Backdrop ambient glow -->
+  <div class="ambient-glow glow-contact"></div>
+
+  <div class="container contact-container">
+    
+    <!-- Contact Split Header -->
+    <div class="contact-header-split scroll-reveal">
+      <span class="contact-index">06 / TALK</span>
+      <h2 class="contact-title gradient-text">CONTACT</h2>
+    </div>
+
+    <!-- Main Content Split Grid -->
+    <div class="contact-split-grid">
+      
+      <!-- Left Side: Giant Bold Slogan & Links -->
+      <div class="contact-left scroll-reveal" style="transition-delay: 0.15s;">
+        <h3 class="contact-slogan">
+          LET'S<br />
+          WORK<br />
+          TOGETHER.
+        </h3>
+        
+        <div class="contact-direct-links">
+          <div class="direct-link-item">
+            <span class="direct-label">EMAIL ME</span>
+            <a href="mailto:ahnaf@bhamakerti.com" class="direct-value">AHNAF@BHAMAKERTI.COM</a>
+          </div>
+          <div class="direct-link-item">
+            <span class="direct-label">FIND ME</span>
+            <div class="direct-socials">
+              <a href="#" class="social-text-link">GITHUB</a>
+              <span class="social-sep">/</span>
+              <a href="#" class="social-text-link">LINKEDIN</a>
+              <span class="social-sep">/</span>
+              <a href="#" class="social-text-link">TELEGRAM</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Side: Minimalist Underlined Form -->
+      <div class="contact-right scroll-reveal" style="transition-delay: 0.3s;">
+        <form id="brutalist-contact-form" class="brutalist-contact-form brutalist-card">
+          <h3 class="form-card-title">KIRIM PESAN</h3>
+
+          <div class="form-underlined-grid">
+            
+            <!-- Name Input Field -->
+            <div class="input-underlined-group">
+              <input type="text" id="name" name="name" required placeholder="NAMA LENGKAP" />
+              <span class="arrow-indicator">&rarr;</span>
+            </div>
+
+            <!-- Email Input Field -->
+            <div class="input-underlined-group">
+              <input type="email" id="email" name="email" required placeholder="ALAMAT EMAIL" />
+              <span class="arrow-indicator">&rarr;</span>
+            </div>
+
+            <!-- Subject Input Field -->
+            <div class="input-underlined-group">
+              <input type="text" id="subject" name="subject" required placeholder="SUBJEK PESAN" />
+              <span class="arrow-indicator">&rarr;</span>
+            </div>
+
+            <!-- Message Input Field -->
+            <div class="input-underlined-group">
+              <textarea id="message" name="message" rows="4" required placeholder="TULIS PESAN ANDA DI SINI..."></textarea>
+              <span class="arrow-indicator">&rarr;</span>
+            </div>
+
+          </div>
+
+          <!-- Submit Button brutalist style -->
+          <button type="submit" class="brutalist-btn contact-submit-btn accent">
+            <span>KIRIM PESAN</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+
+          <!-- Form feedback alert -->
+          <div id="brutalist-form-feedback" class="brutalist-feedback-message"></div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact-section {
+    background-color: var(--bg-primary);
+    position: relative;
+    border-bottom: 1.5px solid var(--color-border);
+    transition: background-color 0.5s ease;
+  }
+
+  .glow-contact {
+    width: 320px;
+    height: 320px;
+    background-color: var(--color-accent-glow);
+    bottom: 10%;
+    left: 10%;
+    filter: blur(85px);
+  }
+
+  /* Split Header styling */
+  .contact-header-split {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 1.5px solid var(--color-border);
+    padding-bottom: 0.5rem;
+    margin-bottom: 4rem;
+  }
+
+  .contact-index {
+    font-family: var(--font-subheading);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+  }
+
+  .contact-title {
+    font-size: 3rem;
+    line-height: 0.8;
+  }
+
+  /* Main grid */
+  .contact-split-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3.5rem;
+    align-items: start;
+  }
+
+  /* Left Side: Slogan and links */
+  .contact-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .contact-slogan {
+    font-size: clamp(3.2rem, 10vw, 6.5rem);
+    line-height: 0.85;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+  }
+
+  .contact-direct-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    border-top: 1.5px solid var(--color-border);
+    padding-top: 2rem;
+    max-width: 400px;
+  }
+
+  .direct-link-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .direct-label {
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .direct-value {
+    font-family: var(--font-subheading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: 0.02em;
+    transition: var(--transition-fast);
+  }
+
+  .direct-value:hover {
+    color: var(--text-secondary);
+    text-decoration: underline;
+  }
+
+  .direct-socials {
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+    font-family: var(--font-subheading);
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+
+  .social-text-link {
+    color: var(--text-primary);
+    transition: var(--transition-fast);
+  }
+
+  .social-text-link:hover {
+    text-decoration: underline;
+  }
+
+  .social-sep {
+    color: var(--text-muted);
+    opacity: 0.5;
+  }
+
+  /* Right Side: Form (Frosted Glass Brutalist Card) */
+  .brutalist-contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    box-shadow: 4px 4px 0px var(--color-border);
+    border-radius: 0;
+  }
+
+  .form-card-title {
+    font-family: var(--font-subheading);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    border-bottom: 1.5px solid var(--color-border);
+    padding-bottom: 0.6rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.05em;
+  }
+
+  .form-underlined-grid {
+    display: flex;
+    flex-direction: column;
+    border-top: 1.5px solid var(--color-border);
+  }
+
+  .input-underlined-group {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    border-bottom: 1.5px solid var(--color-border);
+    background-color: transparent;
+  }
+
+  .input-underlined-group input,
+  .input-underlined-group textarea {
+    width: 100%;
+    padding: 1.2rem 2rem 1.2rem 0;
+    background-color: transparent;
+    font-family: var(--font-subheading);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    border: none;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    transition: var(--transition-fast);
+  }
+
+  .input-underlined-group textarea {
+    resize: vertical;
+    text-transform: none;
+  }
+
+  /* Placeholder Styling */
+  .input-underlined-group input::placeholder,
+  .input-underlined-group textarea::placeholder {
+    color: var(--text-muted);
+    opacity: 0.65;
+  }
+
+  .arrow-indicator {
+    position: absolute;
+    right: 0.2rem;
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    transition: var(--transition-fast);
+    pointer-events: none;
+  }
+
+  /* Focus Animations with Glowing Borders */
+  .input-underlined-group input:focus,
+  .input-underlined-group textarea:focus {
+    padding-left: 0.5rem;
+    color: var(--color-accent);
+  }
+
+  .input-underlined-group input:focus ~ .arrow-indicator,
+  .input-underlined-group textarea:focus ~ .arrow-indicator {
+    color: var(--color-accent);
+    transform: translateX(4px);
+  }
+
+  .contact-submit-btn {
+    width: 100%;
+    justify-content: center;
+    box-shadow: 2px 2px 0px var(--color-border);
+  }
+
+  .contact-submit-btn:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0px var(--color-border);
+  }
+
+  /* Feedback Notification */
+  .brutalist-feedback-message {
+    padding: 0.8rem 1.2rem;
+    font-family: var(--font-subheading);
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-align: center;
+    border: 1.5px solid var(--color-border);
+    display: none;
+    background-color: var(--card-bg);
+  }
+
+  .brutalist-feedback-message.success {
+    display: block;
+    background-color: #f4f6f4;
+    color: #121c15;
+    box-shadow: 4px 4px 0px #121c15;
+  }
+
+  .brutalist-feedback-message.error {
+    display: block;
+    background-color: rgba(248, 113, 113, 0.15);
+    color: #b91c1c;
+    box-shadow: 4px 4px 0px #b91c1c;
+  }
+
+  /* Screen Size Sizing */
+  @media (min-width: 768px) {
+    .contact-submit-btn {
+      width: auto;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .contact-split-grid {
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 5rem;
+    }
+  }
+</style>
+
+<script>
+  const contactForm = document.getElementById('brutalist-contact-form');
+  const feedbackMsg = document.getElementById('brutalist-form-feedback');
+
+  contactForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const submitBtn = contactForm.querySelector('.contact-submit-btn') as HTMLButtonElement;
+    const btnSpan = submitBtn.querySelector('span');
+    
+    if (btnSpan && feedbackMsg) {
+      const originalText = btnSpan.innerText;
+      btnSpan.innerText = 'MENGIRIM...';
+      submitBtn.disabled = true;
+
+      setTimeout(() => {
+        btnSpan.innerText = originalText;
+        submitBtn.disabled = false;
+        
+        feedbackMsg.className = 'brutalist-feedback-message success';
+        feedbackMsg.innerText = 'SUKSES! PESAN ANDA TELAH TERKIRIM SECARA SIMULASI. SAYA AKAN SEGERA MENGHUBUNGI ANDA.';
+        
+        (contactForm as HTMLFormElement).reset();
+        
+        setTimeout(() => {
+          feedbackMsg.style.display = 'none';
+        }, 6000);
+
+      }, 1200);
+    }
+  });
+</script>

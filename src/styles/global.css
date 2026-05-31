@@ -1,0 +1,289 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+/* --- PREMIUM HYBRID SAGE GLASS-BRUTALISM TOKENS --- */
+:root {
+  /* Fonts */
+  --font-heading: 'Space Grotesk', sans-serif;
+  --font-subheading: 'Plus Jakarta Sans', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+
+  /* HSL Color System (Default Light Sage Green) */
+  --bg-primary: #b4c6b8;
+  --bg-secondary: #a3b5a7;
+  --bg-tertiary: #92a496;
+  
+  --text-primary: #121c15;
+  --text-secondary: #24352a;
+  --text-muted: #4e5f53;
+  
+  --color-border: #121c15;
+  --color-primary: #121c15;
+  --color-accent: #6d5b97; /* Elegant Deep Violet Accent */
+  --color-accent-glow: rgba(109, 91, 151, 0.15);
+  
+  --card-bg: rgba(244, 246, 244, 0.75); /* Frosted Glassmorphism */
+  --card-border: rgba(18, 28, 21, 0.08);
+  --card-shadow: rgba(18, 28, 21, 0.08);
+
+  --header-bg: rgba(180, 198, 184, 0.7);
+
+  /* Animations */
+  --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Dark Forest & Neon Purple Theme overrides */
+[data-theme="dark"] {
+  --bg-primary: #0f1612;
+  --bg-secondary: #16201a;
+  --bg-tertiary: #1f2d24;
+  
+  --text-primary: #b4c6b8;
+  --text-secondary: #9cb0a1;
+  --text-muted: #677b6d;
+  
+  --color-border: #b4c6b8;
+  --color-primary: #b4c6b8;
+  --color-accent: #b7a9db; /* Soft Pastel Violet Glow */
+  --color-accent-glow: rgba(183, 169, 219, 0.15);
+  
+  --card-bg: rgba(22, 32, 26, 0.75);
+  --card-border: rgba(180, 198, 184, 0.08);
+  --card-shadow: rgba(0, 0, 0, 0.3);
+
+  --header-bg: rgba(15, 22, 18, 0.7);
+}
+
+/* --- BASE STYLES --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  transition: background-color 0.5s ease, color 0.3s ease;
+}
+
+body {
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: var(--transition-fast);
+}
+
+button, input, textarea {
+  font-family: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  outline: none;
+}
+
+/* --- PREMIUM SCROLLBAR --- */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bg-tertiary);
+  border-radius: 5px;
+  border: 2px solid var(--bg-primary);
+  transition: var(--transition-smooth);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+
+/* --- TYPOGRAPHY --- */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+/* --- BRUTALIST GLASSMOPHISM HYBRID UTILITIES --- */
+.brutalist-divider {
+  width: 100%;
+  height: 1.5px;
+  background-color: var(--color-border);
+  margin: 0;
+  opacity: 0.8;
+}
+
+/* The core hybrid card: Frosted glass center with a raw solid brutalist border & shadow */
+.brutalist-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  border: 1.5px solid var(--color-border);
+  box-shadow: 4px 4px 0px var(--color-border);
+  padding: 2rem;
+  transition: var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+}
+
+.brutalist-card:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 7px 7px 0px var(--color-border);
+  border-color: var(--color-border);
+}
+
+.brutalist-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
+}
+
+.brutalist-badge {
+  display: inline-block;
+  padding: 0.5rem 1.1rem;
+  border: 1.5px solid var(--color-border);
+  background-color: var(--card-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-family: var(--font-subheading);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  transition: var(--transition-fast);
+}
+
+.brutalist-badge:hover {
+  background-color: var(--text-primary);
+  color: var(--bg-primary);
+  transform: translateY(-2px);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--text-primary) 20%, var(--color-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
+}
+
+/* --- BUTTONS --- */
+.brutalist-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1.8rem;
+  background-color: var(--card-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1.5px solid var(--color-border);
+  box-shadow: 4px 4px 0px var(--color-border);
+  font-family: var(--font-subheading);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  color: var(--text-primary);
+}
+
+.brutalist-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px var(--color-border);
+  background-color: var(--text-primary);
+  color: var(--bg-primary);
+}
+
+.brutalist-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px var(--color-border);
+}
+
+.brutalist-btn.accent {
+  background-color: var(--text-primary);
+  color: var(--bg-primary);
+}
+
+.brutalist-btn.accent:hover {
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+}
+
+/* --- DYNAMIC GLOW BACKGROUND SPHERES --- */
+.ambient-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.28;
+  pointer-events: none;
+  z-index: 0;
+  mix-blend-mode: multiply;
+  animation: floatAmbient 12s ease-in-out infinite alternate;
+}
+
+[data-theme="dark"] .ambient-glow {
+  opacity: 0.12;
+  mix-blend-mode: screen;
+}
+
+@keyframes floatAmbient {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    transform: translate(30px, -30px) scale(1.15);
+  }
+}
+
+/* --- LAYOUT WRAPPER --- */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  position: relative;
+  z-index: 5;
+}
+
+section {
+  padding: 7rem 0;
+  position: relative;
+  border-bottom: 1.5px solid var(--color-border);
+  overflow: hidden;
+}
+
+section:last-of-type {
+  border-bottom: none;
+}
+
+/* --- SCROLL REVEAL (PREMIUM FLUID SLIDE) --- */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(25px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scroll-reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}

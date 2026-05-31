@@ -1,0 +1,357 @@
+---
+---
+
+<header class="main-header">
+  <!-- Top Header Bar -->
+  <div class="container header-container">
+    <!-- Logo -->
+    <a href="#" class="logo">
+      AHNAF<span class="dot">.</span>
+    </a>
+
+    <!-- Desktop Navigation -->
+    <nav class="desktop-nav">
+      <ul class="nav-links">
+        <li><a href="#about" class="nav-link">ABOUT</a></li>
+        <li><a href="#skills" class="nav-link">SKILLS</a></li>
+        <li><a href="#projects" class="nav-link">PROJECTS</a></li>
+        <li><a href="#experience" class="nav-link">EXPERIENCE</a></li>
+        <li><a href="#contact" class="nav-link">CONTACT</a></li>
+      </ul>
+    </nav>
+
+    <!-- Header Actions -->
+    <div class="header-actions">
+      <!-- Theme Switcher button -->
+      <button id="theme-toggle" class="brutalist-theme-btn" aria-label="Toggle theme">
+        THEME
+      </button>
+
+      <!-- Hamburger Menu Button (Mobile) -->
+      <button id="mobile-menu-toggle" class="hamburger" aria-label="Toggle menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Divider Line -->
+  <div class="brutalist-divider"></div>
+
+  <!-- Secondary Ticker Sub-Header (Matches reference screenshot) -->
+  <div class="ticker-subheader">
+    <div class="ticker-container">
+      <div class="ticker-item">FRONTEND DEV</div>
+      <div class="ticker-item">1+ Y. LEARNING</div>
+      <div class="ticker-item">WEB</div>
+      <div class="ticker-item">ASTROJS</div>
+      <div class="ticker-item">PORTFOLIO</div>
+      <div class="ticker-item">OPEN TO WORK</div>
+    </div>
+  </div>
+
+  <!-- Divider Line Under Ticker -->
+  <div class="brutalist-divider"></div>
+
+  <!-- Mobile Navigation Overlay -->
+  <div id="mobile-menu" class="mobile-menu-overlay">
+    <nav class="mobile-nav">
+      <ul class="mobile-links">
+        <li><a href="#" class="mobile-link">HOME</a></li>
+        <li><a href="#about" class="mobile-link">ABOUT</a></li>
+        <li><a href="#skills" class="mobile-link">SKILLS</a></li>
+        <li><a href="#projects" class="mobile-link">PROJECTS</a></li>
+        <li><a href="#experience" class="mobile-link">EXPERIENCE</a></li>
+        <li><a href="#contact" class="mobile-link">CONTACT</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .main-header {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: var(--bg-primary);
+    transition: background-color 0.4s ease;
+  }
+
+  .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+  }
+
+  /* Logo */
+  .logo {
+    font-family: var(--font-subheading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-primary);
+  }
+
+  .logo .dot {
+    color: var(--text-muted);
+  }
+
+  /* Desktop Navigation */
+  .desktop-nav {
+    display: none;
+  }
+
+  .nav-links {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+  }
+
+  .nav-link {
+    font-family: var(--font-subheading);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: 0.05em;
+    transition: var(--transition-fast);
+  }
+
+  .nav-link:hover,
+  .nav-link.active {
+    color: var(--text-primary);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1.5px;
+  }
+
+  /* Header Actions */
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  /* Theme button brutalist style */
+  .brutalist-theme-btn {
+    font-family: var(--font-subheading);
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    padding: 0.4rem 1rem;
+    border: 1.5px solid var(--color-border);
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: var(--transition-fast);
+  }
+
+  .brutalist-theme-btn:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 2px 2px 0px var(--color-border);
+    background-color: var(--text-primary);
+    color: var(--bg-primary);
+  }
+
+  .brutalist-theme-btn:active {
+    transform: translate(1px, 1px);
+    box-shadow: 0px 0px 0px var(--color-border);
+  }
+
+  /* Secondary Ticker Sub-header (Strictly styled like screenshot) */
+  .ticker-subheader {
+    width: 100%;
+    background-color: var(--bg-primary);
+    overflow: hidden;
+    padding: 0.5rem 0;
+  }
+
+  .ticker-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .ticker-item {
+    font-family: var(--font-subheading);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    position: relative;
+    padding: 0 0.5rem;
+  }
+
+  /* Vertical separator lines like reference */
+  .ticker-item::after {
+    content: '|';
+    position: absolute;
+    right: -1.2rem;
+    color: var(--color-border);
+    opacity: 0.5;
+  }
+
+  .ticker-item:last-child::after {
+    content: '';
+  }
+
+  /* Hamburger Menu (Mobile) */
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 22px;
+    height: 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1001;
+  }
+
+  .bar {
+    width: 100%;
+    height: 2px;
+    background-color: var(--text-primary);
+    transition: var(--transition-fast);
+  }
+
+  .hamburger.active .bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .hamburger.active .bar:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger.active .bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* Mobile menu modal */
+  .mobile-menu-overlay {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 100%;
+    height: 100vh;
+    background-color: var(--bg-primary);
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: var(--transition-smooth);
+    border-left: 1.5px solid var(--color-border);
+  }
+
+  .mobile-menu-overlay.active {
+    right: 0;
+  }
+
+  .mobile-nav {
+    text-align: center;
+  }
+
+  .mobile-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .mobile-link {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+    transition: var(--transition-fast);
+  }
+
+  .mobile-link:hover {
+    color: var(--text-primary);
+    letter-spacing: 2px;
+  }
+
+  /* Responsive media query */
+  @media (min-width: 768px) {
+    .desktop-nav {
+      display: block;
+    }
+    .hamburger {
+      display: none;
+    }
+    .mobile-menu-overlay {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  // Mobile Menu Switch logic
+  const hamburger = document.getElementById('mobile-menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const mobileLinks = document.querySelectorAll('.mobile-link');
+
+  const toggleMenu = () => {
+    hamburger?.classList.toggle('active');
+    mobileMenu?.classList.toggle('active');
+    document.body.style.overflow = mobileMenu?.classList.contains('active') ? 'hidden' : 'auto';
+  };
+
+  hamburger?.addEventListener('click', toggleMenu);
+  
+  mobileLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      hamburger?.classList.remove('active');
+      mobileMenu?.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    });
+  });
+
+  // Dark Forest / Light Sage theme toggling
+  const themeBtn = document.getElementById('theme-toggle');
+  
+  themeBtn?.addEventListener('click', () => {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    
+    if (isDark) {
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('theme', 'light');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('theme', 'dark');
+    }
+  });
+
+  // Active link check
+  const sections = document.querySelectorAll('section');
+  const navLinks = document.querySelectorAll('.nav-link');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    
+    sections.forEach(section => {
+      const sectionTop = (section as HTMLElement).offsetTop;
+      if (window.scrollY >= (sectionTop - 120)) {
+        current = section.getAttribute('id') || '';
+      }
+    });
+
+    navLinks.forEach(link => {
+      link.classList.remove('active');
+      const href = link.getAttribute('href');
+      if (href === `#${current}`) {
+        link.classList.add('active');
+      }
+    });
+  });
+</script>

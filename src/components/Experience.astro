@@ -1,0 +1,206 @@
+---
+const milestones = [
+  {
+    period: '2023 (Semester 5)',
+    title: 'Essential Programming',
+    subtitle: 'Fullstack Web Development by LearningX',
+    desc: 'Mengikuti program bootcamp intensif pengembangan web fullstack yang dikonversi langsung dengan beban mata kuliah perkuliahan saya pada Semester 5 di tahun 2023.',
+    icon: '💻'
+  },
+  {
+    period: '2024 (Semester 6)',
+    title: 'Web Developer Intern',
+    subtitle: 'Dispendukcapil Kota Semarang',
+    desc: 'Melaksanakan program magang industri sebagai web developer pada Semester 6 kuliah, berpartisipasi aktif dalam pemeliharaan sistem informasi kependudukan kota.',
+    icon: '🏛️'
+  },
+  {
+    period: '2025 - 2026',
+    title: 'Programmer Intern',
+    subtitle: 'Maganghub Kemnaker - Kemenlu RI',
+    desc: 'Setelah menyelesaikan studi, terpilih mengikuti program kemitraan Maganghub Kemnaker di Kementerian Luar Negeri untuk mengelola sistem aplikasi internal.',
+    icon: '🇮🇩'
+  }
+];
+---
+
+<section id="experience" class="experience-section">
+  <!-- Backdrop ambient glow -->
+  <div class="ambient-glow glow-experience"></div>
+
+  <div class="container">
+    <!-- Experience Split Header -->
+    <div class="experience-header-split scroll-reveal">
+      <span class="experience-index">05 / JOURNEY</span>
+      <h2 class="experience-title gradient-text">EXPERIENCE</h2>
+    </div>
+
+    <!-- Simplified Sideways Horizontal Scroll Track -->
+    <div class="timeline-scroll-wrapper scroll-reveal" style="transition-delay: 0.1s;">
+      
+      <div class="timeline-scroll-track">
+        {milestones.map((milestone, index) => (
+          
+          <!-- Frosted Glass Brutalist Card (Laid out strictly sideways) -->
+          <div class="timeline-card brutalist-card">
+            <span class="timeline-period">{milestone.period}</span>
+            <h3 class="timeline-row-title">
+              <span class="timeline-icon">{milestone.icon}</span> {milestone.title}
+            </h3>
+            <h4 class="timeline-subtitle">{milestone.subtitle}</h4>
+            <p class="timeline-desc">{milestone.desc}</p>
+          </div>
+          
+        ))}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .experience-section {
+    background-color: var(--bg-secondary);
+    position: relative;
+    border-bottom: 1.5px solid var(--color-border);
+    transition: background-color 0.5s ease;
+  }
+
+  .glow-experience {
+    width: 320px;
+    height: 320px;
+    background-color: var(--color-accent-glow);
+    bottom: 10%;
+    right: 5%;
+    filter: blur(85px);
+  }
+
+  /* Split Header styling */
+  .experience-header-split {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 1.5px solid var(--color-border);
+    padding-bottom: 0.5rem;
+    margin-bottom: 3.5rem;
+  }
+
+  .experience-index {
+    font-family: var(--font-subheading);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+  }
+
+  .experience-title {
+    font-size: 3rem;
+    line-height: 0.8;
+  }
+
+  /* --- TIMELINE HORIZONTAL MENYAMPING (SCROLLABLE flex row) --- */
+  .timeline-scroll-wrapper {
+    position: relative;
+    width: 100%;
+    z-index: 5;
+  }
+
+  .timeline-scroll-track {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 2.2rem;
+    overflow-x: auto;
+    /* Spacing to prevent card shadows/borders from clipping */
+    padding: 1.5rem 0.5rem 2.5rem 0.5rem;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: auto;
+  }
+
+  /* Custom Brutalist scrollbar styled strictly like reference palette */
+  .timeline-scroll-track::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .timeline-scroll-track::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+    border: 1px solid var(--color-border);
+  }
+
+  .timeline-scroll-track::-webkit-scrollbar-thumb {
+    background: var(--text-primary);
+    border: 1px solid var(--bg-primary);
+  }
+
+  /* Timeline content card */
+  .timeline-card {
+    width: 100%;
+    max-width: 350px; /* Perfect card width for horizontal scrolling flow */
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    border-radius: 0;
+    box-shadow: 4px 4px 0px var(--color-border);
+    padding: 2.2rem;
+    transition: var(--transition-smooth);
+  }
+
+  .timeline-card:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 7px 7px 0px var(--color-border);
+  }
+
+  .timeline-period {
+    display: inline-block;
+    font-family: var(--font-subheading);
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--color-accent);
+    margin-bottom: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .timeline-row-title {
+    font-family: var(--font-subheading);
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    letter-spacing: 0.01em;
+  }
+
+  .timeline-icon {
+    font-size: 1.25rem;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .timeline-subtitle {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-bottom: 1.2rem;
+    opacity: 0.9;
+  }
+
+  .timeline-desc {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.65;
+  }
+
+  /* Responsive screen sizing */
+  @media (max-width: 768px) {
+    .timeline-card {
+      max-width: 290px; /* Slightly narrower on mobile for easy swiping */
+    }
+    .timeline-scroll-track {
+      gap: 1.5rem;
+    }
+  }
+</style>

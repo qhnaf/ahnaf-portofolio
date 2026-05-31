@@ -1,0 +1,235 @@
+---
+const allSkills = [
+  'HTML5', 'CSS3', 'JAVASCRIPT', 'TYPESCRIPT', 'REACT', 'NEXTJS', 'ASTROJS',
+  'TAILWIND', 'NODEJS', 'EXPRESS', 'POSTGRES', 'PRISMA', 'SUPABASE', 'REST API',
+  'GIT', 'GITHUB', 'FIGMA', 'VERCEL', 'NETLIFY'
+];
+
+const categories = [
+  {
+    name: 'FRONTEND CORE & INTERACTIVE',
+    skills: ['HTML5', 'CSS3', 'JAVASCRIPT', 'TYPESCRIPT', 'REACT', 'NEXTJS', 'TAILWIND']
+  },
+  {
+    name: 'BACKEND & DATABASE SERVICES',
+    skills: ['NODEJS', 'EXPRESS', 'POSTGRES', 'PRISMA', 'SUPABASE', 'REST API']
+  },
+  {
+    name: 'TOOLS & DEPLOYMENT STACK',
+    skills: ['GIT', 'GITHUB', 'FIGMA', 'VERCEL', 'ASTROJS', 'NETLIFY']
+  }
+];
+---
+
+<section id="skills" class="skills-section">
+  <!-- Interactive Background Glow -->
+  <div class="ambient-glow glow-skills"></div>
+
+  <div class="container skills-container">
+    
+    <!-- Skills Split Header -->
+    <div class="skills-header-split scroll-reveal">
+      <span class="skills-index">03 / STACK</span>
+      <h2 class="skills-title gradient-text">SKILLS</h2>
+    </div>
+
+    <!-- Dual Panel Layout -->
+    <div class="skills-split-layout">
+      <!-- Left Panel: Frosted Glass Panel with list (Strictly like screenshot) -->
+      <div class="skills-left-panel brutalist-card scroll-reveal" style="transition-delay: 0.1s;">
+        <div class="skills-index-header">ALL STACK INDEX</div>
+        <ul class="skills-index-list">
+          {allSkills.map(skill => (
+            <li class="skills-index-item">
+              <span class="index-arrow">&gt;</span>
+              <span class="index-name">{skill}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Right Panel: Categorised Brutalist Frosted Badges -->
+      <div class="skills-right-panel scroll-reveal" style="transition-delay: 0.25s;">
+        {categories.map((category, index) => (
+          <div class="skills-group" style={`transition-delay: ${index * 0.1}s;`}>
+            <h3 class="group-title">{category.name}</h3>
+            
+            <div class="badges-grid">
+              {category.skills.map(skill => (
+                <div class="brutalist-badge skill-badge">
+                  {skill}
+                </div>
+              ))}
+            </div>
+            
+            {index < categories.length - 1 && <div class="brutalist-divider group-divider"></div>}
+          </div>
+        ))}
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .skills-section {
+    background-color: var(--bg-secondary);
+    position: relative;
+    border-bottom: 1.5px solid var(--color-border);
+    transition: background-color 0.5s ease;
+  }
+
+  .glow-skills {
+    width: 320px;
+    height: 320px;
+    background-color: var(--color-accent-glow);
+    top: 40%;
+    left: 45%;
+    filter: blur(95px);
+  }
+
+  /* Split Header styling */
+  .skills-header-split {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 1.5px solid var(--color-border);
+    padding-bottom: 0.5rem;
+    margin-bottom: 3.5rem;
+  }
+
+  .skills-index {
+    font-family: var(--font-subheading);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+  }
+
+  .skills-title {
+    font-size: 3rem;
+    line-height: 0.8;
+  }
+
+  /* Dual Panel split Grid */
+  .skills-split-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  /* Left Panel styling (Brutalist Frosted Card wrapper) */
+  .skills-left-panel {
+    padding: 0; /* Let list borders hit edges */
+    box-shadow: 4px 4px 0px var(--color-border);
+  }
+
+  .skills-index-header {
+    font-family: var(--font-subheading);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 0.9rem 1.4rem;
+    background-color: var(--text-primary);
+    color: var(--bg-primary);
+    border-bottom: 1.5px solid var(--color-border);
+  }
+
+  .skills-index-list {
+    list-style: none;
+    max-height: 480px;
+    overflow-y: auto;
+  }
+
+  .skills-index-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.8rem 1.4rem;
+    border-bottom: 1px solid var(--card-border);
+    font-family: var(--font-subheading);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    transition: var(--transition-fast);
+  }
+
+  .skills-index-item:last-child {
+    border-bottom: none;
+  }
+
+  .skills-index-item:hover {
+    background-color: rgba(18, 28, 21, 0.04);
+    color: var(--text-primary);
+    padding-left: 1.8rem;
+  }
+
+  .index-arrow {
+    color: var(--text-muted);
+    font-weight: 700;
+  }
+
+  /* Right Panel styling */
+  .skills-right-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .skills-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .group-title {
+    font-family: var(--font-subheading);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    letter-spacing: 0.05em;
+  }
+
+  .badges-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
+
+  .skill-badge {
+    padding: 0.6rem 1.2rem;
+    border-radius: 0;
+    background-color: var(--card-bg);
+    cursor: default;
+    border: 1.5px solid var(--color-border);
+    box-shadow: 2px 2px 0px var(--color-border);
+  }
+
+  .skill-badge:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0px var(--color-border);
+    background-color: var(--text-primary);
+    color: var(--bg-primary);
+  }
+
+  .group-divider {
+    margin-top: 1.5rem;
+    opacity: 0.4;
+  }
+
+  /* Screen adjustments */
+  @media (min-width: 768px) {
+    .skills-split-layout {
+      grid-template-columns: 0.6fr 1.4fr;
+      gap: 3.5rem;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .skills-split-layout {
+      grid-template-columns: 0.5fr 1.5fr;
+      gap: 4.5rem;
+    }
+  }
+</style>

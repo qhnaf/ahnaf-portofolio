@@ -1,0 +1,282 @@
+---
+const projects = [
+  {
+    num: '01',
+    title: 'SMASHBOOK PRO',
+    desc: 'Simulasi dashboard forum diskusi developer yang menyertakan interaktivitas state, dynamic styling, dan sidebar navigasi yang kompleks.',
+    tags: ['ASTROJS', 'TYPESCRIPT', 'CSS GRID'],
+    demo: '#',
+    code: '#'
+  },
+  {
+    num: '02',
+    title: 'ECOSHOP COMMERCE',
+    desc: 'Desain konseptual platform e-commerce produk ramah lingkungan dengan pemfilteran berbasis client-side dan shopping cart lokal.',
+    tags: ['JAVASCRIPT', 'VANILLA CSS', 'LOCAL STORAGE'],
+    demo: '#',
+    code: '#'
+  },
+  {
+    num: '03',
+    title: 'PERSONAL PORTFOLIO V1',
+    desc: 'Website portofolio awal yang dibuat menggunakan Next.js App Router dan Tailwind CSS untuk melatih penataan layout modular React.',
+    tags: ['NEXTJS', 'REACT', 'TAILWIND CSS'],
+    demo: '#',
+    code: '#'
+  }
+];
+---
+
+<section id="projects" class="projects-section">
+  <!-- Dynamic Background Glow Spheres -->
+  <div class="ambient-glow glow-projects-1"></div>
+  <div class="ambient-glow glow-projects-2"></div>
+
+  <div class="container">
+    
+    <!-- Projects Split Header -->
+    <div class="projects-header-split scroll-reveal">
+      <span class="projects-index">04 / WORKS</span>
+      <h2 class="projects-title gradient-text">PROJECTS</h2>
+    </div>
+
+    <!-- Brutalist Horizontal Rows List (Strictly matches reference screenshot) -->
+    <div class="projects-rows-list">
+      {projects.map((project, index) => (
+        <div class="project-row scroll-reveal" style={`transition-delay: ${index * 0.15}s;`}>
+          <div class="row-content-wrapper">
+            
+            <!-- Index & Main Info Grid -->
+            <div class="project-meta-grid">
+              <!-- Row Index Num -->
+              <span class="project-num">{project.num}</span>
+              
+              <!-- Title, Description & Tags -->
+              <div class="project-details">
+                <h3 class="project-row-title">{project.title}</h3>
+                <p class="project-row-desc">{project.desc}</p>
+                
+                <div class="project-row-tags">
+                  {project.tags.map(tag => (
+                    <span class="project-row-tag">{tag}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <!-- Right-Aligned Action Links -->
+            <div class="project-row-actions">
+              <a href={project.demo} class="brutalist-btn inline-btn-row" target="_blank" rel="noopener noreferrer">
+                <span>VIEW SITE</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+              </a>
+              <a href={project.code} class="brutalist-btn inline-btn-row secondary" target="_blank" rel="noopener noreferrer">
+                <span>GITHUB</span>
+              </a>
+            </div>
+
+          </div>
+        </div>
+      ))}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .projects-section {
+    background-color: var(--bg-primary);
+    position: relative;
+    border-bottom: 1.5px solid var(--color-border);
+    transition: background-color 0.5s ease;
+  }
+
+  /* Ambient Glow Placement */
+  .glow-projects-1 {
+    width: 320px;
+    height: 320px;
+    background-color: var(--color-accent-glow);
+    top: 20%;
+    right: 10%;
+    filter: blur(85px);
+  }
+
+  .glow-projects-2 {
+    width: 260px;
+    height: 260px;
+    background-color: #38b2ac;
+    bottom: 15%;
+    left: 8%;
+    filter: blur(90px);
+    animation-delay: -1.5s;
+  }
+
+  /* Split Header styling */
+  .projects-header-split {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 1.5px solid var(--color-border);
+    padding-bottom: 0.5rem;
+    margin-bottom: 4rem;
+  }
+
+  .projects-index {
+    font-family: var(--font-subheading);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+  }
+
+  .projects-title {
+    font-size: 3rem;
+    line-height: 0.8;
+  }
+
+  /* Horizontal Rows container */
+  .projects-rows-list {
+    display: flex;
+    flex-direction: column;
+    border-top: 1.5px solid var(--color-border);
+    position: relative;
+    z-index: 5;
+  }
+
+  /* Single Project Row (Strictly split like screenshot) */
+  .project-row {
+    width: 100%;
+    border-bottom: 1.5px solid var(--color-border);
+    transition: var(--transition-smooth);
+  }
+
+  .project-row:hover {
+    background-color: rgba(18, 28, 21, 0.03);
+  }
+
+  .row-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 2.5rem 0;
+  }
+
+  /* Left Side Grid (Num + Title details) */
+  .project-meta-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .project-num {
+    font-family: var(--font-subheading);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    line-height: 1.0;
+  }
+
+  .project-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .project-row-title {
+    font-family: var(--font-subheading);
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 0.01em;
+  }
+
+  .project-row-desc {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    max-width: 680px;
+  }
+
+  /* Tags */
+  .project-row-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .project-row-tag {
+    font-family: var(--font-subheading);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 0.25rem 0.7rem;
+    border: 1px solid var(--color-border);
+    background-color: var(--card-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--text-secondary);
+  }
+
+  /* Right Side Actions */
+  .project-row-actions {
+    display: flex;
+    gap: 0.8rem;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .inline-btn-row {
+    font-size: 0.8rem;
+    padding: 0.55rem 1.1rem;
+    border-radius: 0;
+    box-shadow: 2px 2px 0px var(--color-border);
+  }
+
+  .inline-btn-row:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0px var(--color-border);
+  }
+
+  .inline-btn-row.secondary {
+    background-color: transparent;
+    box-shadow: none;
+    border-color: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .inline-btn-row.secondary:hover {
+    transform: none;
+    background-color: transparent;
+    color: var(--text-primary);
+    text-decoration: underline;
+  }
+
+  /* Responsive screen sizing */
+  @media (min-width: 768px) {
+    .row-content-wrapper {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2.2rem 1.2rem;
+    }
+
+    .project-meta-grid {
+      grid-template-columns: 80px 1fr;
+      gap: 0.5rem;
+    }
+
+    .project-row-title {
+      font-size: 2rem;
+    }
+
+    .project-row-actions {
+      justify-content: flex-end;
+    }
+  }
+</style>
