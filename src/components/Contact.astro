@@ -32,11 +32,11 @@
           <div class="direct-link-item">
             <span class="direct-label">FIND ME</span>
             <div class="direct-socials">
-              <a href="#" class="social-text-link">GITHUB</a>
+              <a href="https://github.com/qhnaf" class="social-text-link" target="_blank" rel="noopener noreferrer">GITHUB</a>
               <span class="social-sep">/</span>
-              <a href="#" class="social-text-link">LINKEDIN</a>
-              <span class="social-sep">/</span>
-              <a href="#" class="social-text-link">TELEGRAM</a>
+              <a href="https://www.linkedin.com/in/ahnafb/" class="social-text-link" target="_blank" rel="noopener noreferrer">LINKEDIN</a>
+              <!-- <span class="social-sep">/</span>
+              <a href="https://t.me/qhnaf" class="social-text-link">TELEGRAM</a> -->
             </div>
           </div>
         </div>
@@ -75,14 +75,19 @@
 
           </div>
 
-          <!-- Submit Button brutalist style -->
-          <button type="submit" class="brutalist-btn contact-submit-btn accent">
-            <span>KIRIM PESAN</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="22" y1="2" x2="11" y2="13"></line>
-              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-            </svg>
-          </button>
+          <!-- Actions Row: Submit & Clear -->
+          <div class="form-actions-row">
+            <button type="submit" class="brutalist-btn contact-submit-btn accent">
+              <span>KIRIM PESAN</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+            </button>
+            <button type="button" id="clear-form-btn" class="brutalist-btn contact-clear-btn">
+              <span>CLEAR</span>
+            </button>
+          </div>
 
           <!-- Form feedback alert -->
           <div id="brutalist-form-feedback" class="brutalist-feedback-message"></div>
@@ -299,15 +304,35 @@
     transform: translateX(4px);
   }
 
-  .contact-submit-btn {
+  .form-actions-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
     width: 100%;
+  }
+
+  .contact-submit-btn,
+  .contact-clear-btn {
+    flex: 1 1 auto;
+    min-width: 150px;
     justify-content: center;
     box-shadow: 2px 2px 0px var(--color-border);
   }
 
-  .contact-submit-btn:hover {
+  .contact-submit-btn:hover,
+  .contact-clear-btn:hover {
     transform: translate(-1px, -1px);
     box-shadow: 4px 4px 0px var(--color-border);
+  }
+
+  .contact-clear-btn {
+    background-color: transparent;
+    color: var(--text-primary);
+  }
+
+  .contact-clear-btn:hover {
+    background-color: var(--text-primary);
+    color: var(--bg-primary);
   }
 
   /* Feedback Notification */
@@ -352,14 +377,16 @@
 </style>
 
 <script>
-  const contactForm = document.getElementById('brutalist-contact-form');
+  const contactForm = document.getElementById('brutalist-contact-form') as HTMLFormElement;
   const feedbackMsg = document.getElementById('brutalist-form-feedback');
+  const clearBtn = document.getElementById('clear-form-btn');
 
+  // Submit Simulation
   contactForm?.addEventListener('submit', (e) => {
     e.preventDefault();
     
     const submitBtn = contactForm.querySelector('.contact-submit-btn') as HTMLButtonElement;
-    const btnSpan = submitBtn.querySelector('span');
+    const btnSpan = submitBtn?.querySelector('span');
     
     if (btnSpan && feedbackMsg) {
       const originalText = btnSpan.innerText;
@@ -372,14 +399,32 @@
         
         feedbackMsg.className = 'brutalist-feedback-message success';
         feedbackMsg.innerText = 'SUKSES! PESAN ANDA TELAH TERKIRIM SECARA SIMULASI. SAYA AKAN SEGERA MENGHUBUNGI ANDA.';
+        feedbackMsg.style.display = 'block';
         
-        (contactForm as HTMLFormElement).reset();
+        contactForm.reset();
         
         setTimeout(() => {
           feedbackMsg.style.display = 'none';
         }, 6000);
 
       }, 1200);
+    }
+  });
+
+  // Clear Form handler
+  clearBtn?.addEventListener('click', () => {
+    if (contactForm) {
+      contactForm.reset();
+      
+      if (feedbackMsg) {
+        feedbackMsg.className = 'brutalist-feedback-message success';
+        feedbackMsg.innerText = 'FORMULIR TELAH DIBERSIHKAN.';
+        feedbackMsg.style.display = 'block';
+        
+        setTimeout(() => {
+          feedbackMsg.style.display = 'none';
+        }, 2000);
+      }
     }
   });
 </script>

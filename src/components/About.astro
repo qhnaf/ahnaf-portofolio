@@ -1,4 +1,5 @@
 ---
+
 ---
 
 <section id="about" class="about-section">
@@ -6,18 +7,15 @@
   <div class="ambient-glow glow-about"></div>
 
   <div class="container about-container">
-    
     <!-- Left Column: Portrait Avatar Box with Frosted Glass Brutalism -->
     <div class="about-visual scroll-reveal">
       <div class="avatar-box brutalist-card">
-        <!-- SVG Avatar Silhouette (Premium Developer Icon) -->
-        <svg viewBox="0 0 100 100" class="avatar-svg" xmlns="http://www.w3.org/2000/svg">
-          <rect width="100" height="100" fill="var(--bg-secondary)"/>
-          <circle cx="50" cy="42" r="14" fill="var(--text-primary)" opacity="0.6"/>
-          <path d="M50 16 L43 24 L57 24 Z" fill="var(--text-primary)"/> <!-- Hat Top -->
-          <ellipse cx="50" cy="80" rx="26" ry="18" fill="var(--text-primary)" opacity="0.7"/>
-          <circle cx="50" cy="53" r="1.5" fill="var(--bg-primary)"/>
-        </svg>
+        <!-- Profile Picture from public directory -->
+        <img
+          src="/ahnaf.JPG"
+          alt="Ahnaf Bhamakerti Arief"
+          class="avatar-img"
+        />
       </div>
     </div>
 
@@ -29,39 +27,53 @@
         <h2 class="about-title gradient-text">ABOUT</h2>
       </div>
 
-      <h3 class="about-subtitle">
-        FRONTEND DEV LEARNING THE FULL STACK.
-      </h3>
-      
+      <h3 class="about-subtitle">FRONTEND DEV LEARNING THE FULL STACK.</h3>
+
       <p class="about-desc">
-        Halo! Saya <strong>Ahnaf Bhamakerti</strong>, seorang pengembang frontend yang berdedikasi tinggi untuk mempelajari arsitektur full-stack secara mendalam. Saya memulai perjalanan belajar menggunakan Next.js dan React, dan sekarang mengeksplorasi optimasi performa modern menggunakan Astro.js.
+        Halo! Saya <strong>Ahnaf Bhamakerti Arief</strong>, seorang pengembang
+        frontend yang berdedikasi tinggi untuk mempelajari arsitektur full-stack
+        secara mendalam. Saya adalah mahasiswa lulusan <strong
+          >Universitas Negeri Semarang</strong
+        > jurusan <strong>Teknik Informatika</strong>. Saya memulai perjalanan
+        belajar menggunakan Next.js dan React, dan sekarang mengeksplorasi
+        optimasi performa modern menggunakan Astro.js.
       </p>
 
       <p class="about-desc">
-        Saya memiliki hasrat untuk menerjemahkan tata letak desain yang kompleks ke dalam kode web bersih yang responsif, berkecepatan tinggi, dan berorientasi pada detail terkecil.
+        Saya memiliki hasrat untuk menerjemahkan tata letak desain yang kompleks
+        ke dalam kode web bersih yang responsif, berkecepatan tinggi, dan
+        berorientasi pada detail terkecil.
       </p>
 
       <!-- Raw Bordered Stats Grid (Strictly divided by thin lines like reference screenshot) -->
       <div class="about-stats-grid brutalist-card">
         <div class="stat-cell border-bottom border-right">
-          <span class="stat-value gradient-text">1+</span>
+          <span class="stat-value gradient-text">4</span>
           <span class="stat-label">TAHUN BELAJAR</span>
         </div>
         <div class="stat-cell border-bottom">
-          <span class="stat-value gradient-text">15+</span>
-          <span class="stat-label">PROYEK DIBUAT</span>
+          <span class="stat-value gradient-text">3.71</span>
+          <span class="stat-label">IPK / GPA</span>
         </div>
-        <div class="stat-cell border-right">
-          <span class="stat-value gradient-text">HI</span>
-          <span class="stat-label">SAY HELLO!</span>
+        <div class="stat-cell border-right unnes-logo-cell">
+          <img
+            src="/unnes-logo.png"
+            alt="Logo UNNES"
+            class="unnes-logo-img"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+          />
+          <span
+            class="stat-value gradient-text fallback-unnes-text"
+            style="display:none;">UNNES</span
+          >
+          <span class="stat-label">UNIVERSITAS NEGERI SEMARANG</span>
         </div>
         <div class="stat-cell">
           <span class="stat-value gradient-text">IDN</span>
-          <span class="stat-label">LOKASI / INDONESIA</span>
+          <span class="stat-label">SEMARANG / INDONESIA</span>
         </div>
       </div>
     </div>
-
   </div>
 </section>
 
@@ -107,14 +119,15 @@
     box-shadow: 6px 6px 0px var(--color-border);
   }
 
-  .avatar-svg {
+  .avatar-img {
     width: 100%;
     height: 100%;
+    object-fit: cover;
     display: block;
     transition: var(--transition-smooth);
   }
 
-  .avatar-box:hover .avatar-svg {
+  .avatar-box:hover .avatar-img {
     transform: scale(1.05);
   }
 
@@ -161,6 +174,7 @@
     color: var(--text-secondary);
     line-height: 1.65;
     margin-bottom: 1.2rem;
+    text-align: justify;
   }
 
   /* Frosted stats grid wrapper */
@@ -197,7 +211,7 @@
     font-family: var(--font-subheading);
     font-size: 2.2rem;
     font-weight: 700;
-    line-height: 1.0;
+    line-height: 1;
   }
 
   .stat-label {
@@ -206,6 +220,34 @@
     font-weight: 700;
     color: var(--text-muted);
     letter-spacing: 0.05em;
+  }
+
+  /* UNNES Logo cells and custom sizing */
+  .unnes-logo-cell {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .unnes-logo-img {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+    margin-bottom: 0.4rem;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15)) grayscale(10%)
+      contrast(110%);
+    transition: var(--transition-fast);
+  }
+
+  .unnes-logo-img:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25)) grayscale(0%)
+      contrast(115%);
+  }
+
+  .fallback-unnes-text {
+    font-size: 2rem !important;
   }
 
   /* Screen Size Queries */
