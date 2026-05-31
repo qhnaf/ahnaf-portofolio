@@ -36,24 +36,6 @@
     </div>
   </div>
 
-  <!-- Divider Line -->
-  <div class="brutalist-divider"></div>
-
-  <!-- Secondary Ticker Sub-Header (Matches reference screenshot) -->
-  <div class="ticker-subheader">
-    <div class="ticker-container">
-      <div class="ticker-item">FRONTEND DEV</div>
-      <div class="ticker-item">1+ Y. LEARNING</div>
-      <div class="ticker-item">WEB</div>
-      <div class="ticker-item">ASTROJS</div>
-      <div class="ticker-item">PORTFOLIO</div>
-      <div class="ticker-item">OPEN TO WORK</div>
-    </div>
-  </div>
-
-  <!-- Divider Line Under Ticker -->
-  <div class="brutalist-divider"></div>
-
   <!-- Mobile Navigation Overlay -->
   <div id="mobile-menu" class="mobile-menu-overlay">
     <nav class="mobile-nav">
@@ -69,15 +51,42 @@
   </div>
 </header>
 
+<!-- Divider Line -->
+<div class="brutalist-divider"></div>
+
+<!-- Secondary Ticker Sub-Header (Matches reference screenshot) -->
+<div class="ticker-subheader">
+  <div class="ticker-container">
+    <div class="ticker-item">FRONTEND DEV</div>
+    <div class="ticker-item">WILLING TO LEARN</div>
+    <div class="ticker-item">WEB</div>
+    <div class="ticker-item">ASTROJS</div>
+    <div class="ticker-item">PORTFOLIO</div>
+    <div class="ticker-item">OPEN TO WORK</div>
+  </div>
+</div>
+
+<!-- Divider Line Under Ticker -->
+<div class="brutalist-divider"></div>
+
 <style>
   .main-header {
-    position: relative;
+    position: sticky;
     top: 0;
     left: 0;
     width: 100%;
     z-index: 1000;
     background-color: var(--bg-primary);
-    transition: background-color 0.4s ease;
+    border-bottom: 1.5px solid transparent;
+    transition: background-color 0.4s ease, border-color 0.4s ease, backdrop-filter 0.4s ease, box-shadow 0.4s ease;
+  }
+
+  .main-header.scrolled {
+    background-color: var(--header-bg);
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    border-bottom: 1.5px solid var(--color-border);
+    box-shadow: 0 4px 20px var(--card-shadow);
   }
 
   .header-container {
@@ -331,6 +340,18 @@
       localStorage.setItem('theme', 'dark');
     }
   });
+
+  // Sticky header scrolled state
+  const header = document.querySelector('.main-header');
+  const handleScrollHeader = () => {
+    if (window.scrollY > 20) {
+      header?.classList.add('scrolled');
+    } else {
+      header?.classList.remove('scrolled');
+    }
+  };
+  window.addEventListener('scroll', handleScrollHeader);
+  handleScrollHeader(); // Run once in case already scrolled
 
   // Active link check
   const sections = document.querySelectorAll('section');
