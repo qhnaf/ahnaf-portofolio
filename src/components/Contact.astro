@@ -47,6 +47,10 @@
         <form id="brutalist-contact-form" class="brutalist-contact-form brutalist-card">
           <h3 class="form-card-title">KIRIM PESAN</h3>
 
+          <!-- Web3Forms Configuration (Dapatkan Key Gratis di https://web3forms.com) -->
+          <input type="hidden" name="access_key" value="aaed7667-f7f2-45b1-ad9e-3ad0e99c905c">
+          <input type="hidden" name="subject" value="Pesan Baru dari Portofolio Digital!">
+
           <div class="form-underlined-grid">
             
             <!-- Name Input Field -->
@@ -381,7 +385,7 @@
   const feedbackMsg = document.getElementById('brutalist-form-feedback');
   const clearBtn = document.getElementById('clear-form-btn');
 
-  // Submit Simulation
+  // Submit via Web3Forms AJAX
   contactForm?.addEventListener('submit', (e) => {
     e.preventDefault();
     
@@ -393,21 +397,53 @@
       btnSpan.innerText = 'MENGIRIM...';
       submitBtn.disabled = true;
 
-      setTimeout(() => {
+      const formData = new FormData(contactForm);
+      const formObject = Object.fromEntries(formData);
+
+      // Web3Forms AJAX submission
+      fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify(formObject)
+      })
+      .then(async (response) => {
+        let json = await response.json();
+        if (response.status === 200) {
+          btnSpan.innerText = originalText;
+          submitBtn.disabled = false;
+          
+          feedbackMsg.className = 'brutalist-feedback-message success';
+          feedbackMsg.innerText = 'SUKSES! PESAN ANDA TELAH BERHASIL TERKIRIM. SAYA AKAN SEGERA MENGHUBUNGI ANDA.';
+          feedbackMsg.style.display = 'block';
+          
+          contactForm.reset();
+        } else {
+          console.log(response);
+          btnSpan.innerText = originalText;
+          submitBtn.disabled = false;
+          
+          feedbackMsg.className = 'brutalist-feedback-message error';
+          feedbackMsg.innerText = json.message || 'OOPS! TERJADI KESALAHAN SAAT MENGIRIM PESAN. SILAKAN COBA LAGI.';
+          feedbackMsg.style.display = 'block';
+        }
+      })
+      .catch((error) => {
+        console.log(error);
         btnSpan.innerText = originalText;
         submitBtn.disabled = false;
         
-        feedbackMsg.className = 'brutalist-feedback-message success';
-        feedbackMsg.innerText = 'SUKSES! PESAN ANDA TELAH TERKIRIM SECARA SIMULASI. SAYA AKAN SEGERA MENGHUBUNGI ANDA.';
+        feedbackMsg.className = 'brutalist-feedback-message error';
+        feedbackMsg.innerText = 'OOPS! JARINGAN BERMASALAH. SILAKAN PERIKSA KONEKSI ANDA DAN COBA LAGI.';
         feedbackMsg.style.display = 'block';
-        
-        contactForm.reset();
-        
+      })
+      .then(() => {
         setTimeout(() => {
           feedbackMsg.style.display = 'none';
-        }, 6000);
-
-      }, 1200);
+        }, 8000);
+      });
     }
   });
 
