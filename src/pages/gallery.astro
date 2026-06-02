@@ -199,19 +199,18 @@ if (isAuthenticated) {
 
   <!-- Custom Delete Confirmation Modal -->
   <div id="deleteModal" class="custom-modal">
-    <div class="modal-card glass-card">
-      <div class="modal-header">
-        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="alert-icon">
-          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-          <line x1="12" y1="9" x2="12" y2="13"></line>
-          <line x1="12" y1="17" x2="12.01" y2="17"></line>
-        </svg>
-        <h3>HAPUS FOTO?</h3>
+    <div class="modal-card brutalist-card">
+      <div class="modal-card-header">
+        <span class="modal-card-alert">WARNING</span>
+        <div class="modal-card-badge">DELETE ACTION</div>
       </div>
-      <p class="modal-body">Apakah Anda yakin ingin menghapus foto privat ini secara permanen? Tindakan ini tidak dapat dibatalkan.</p>
-      <div class="modal-footer">
-        <button id="btnCancelDelete" class="glass-btn btn-secondary">BATAL</button>
-        <button id="btnConfirmDelete" class="glass-btn btn-danger">YA, HAPUS</button>
+      <div class="modal-card-body">
+        <h3 class="modal-card-title">Hapus Foto Permanen?</h3>
+        <p class="modal-card-desc">Apakah Anda yakin ingin menghapus foto ini? Tindakan ini tidak dapat dibatalkan.</p>
+      </div>
+      <div class="modal-card-footer">
+        <button id="btnCancelDelete" class="brutalist-btn btn-cancel">BATAL</button>
+        <button id="btnConfirmDelete" class="brutalist-btn btn-danger-brutal">HAPUS</button>
       </div>
     </div>
   </div>
@@ -695,14 +694,14 @@ if (isAuthenticated) {
     transform: rotate(90deg) scale(1.1);
   }
 
-  /* --- CUSTOM DELETE MODAL --- */
+  /* --- BRUTALIST CONFIRMATION MODAL --- */
   .custom-modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(18, 28, 21, 0.45);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     z-index: 100000;
@@ -710,7 +709,7 @@ if (isAuthenticated) {
     justify-content: center;
     align-items: center;
     opacity: 0;
-    transition: opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: opacity 0.35s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.35s;
   }
 
   .custom-modal.active {
@@ -718,95 +717,124 @@ if (isAuthenticated) {
     opacity: 1;
   }
 
-  .modal-card {
-    max-width: 420px;
+  .modal-card.brutalist-card {
+    max-width: 440px;
     width: 90%;
-    padding: 2.2rem;
-    border-radius: 16px;
-    text-align: center;
-    box-shadow: var(--shadow-brutal, 8px 8px 0 #1a2f24);
-    transform: scale(0.9);
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-
-  .custom-modal.active .modal-card {
-    transform: scale(1);
-  }
-
-  .modal-header {
     display: flex;
     flex-direction: column;
+    gap: 1.8rem;
+    padding: 2rem;
+    background: var(--card-bg);
+    border: 1.5px solid var(--color-border);
+    box-shadow: 4px 4px 0px var(--color-border);
+    border-radius: 0px;
+    transform: translateY(15px) scale(0.98);
+    opacity: 0;
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .custom-modal.active .modal-card.brutalist-card {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+
+  .modal-card-header {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 0.8rem;
-    margin-bottom: 1rem;
+    width: 100%;
+    border-bottom: 1.5px solid var(--color-border);
+    padding-bottom: 0.8rem;
   }
 
-  .alert-icon {
+  .modal-card-alert {
+    font-family: var(--font-subheading);
+    font-weight: 800;
+    font-size: 1rem;
     color: #ef4444;
-    animation: pulse 2s infinite;
+    letter-spacing: 0.05em;
   }
 
-  .modal-header h3 {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.4rem;
+  .modal-card-badge {
+    font-family: var(--font-subheading);
+    font-size: 0.68rem;
     font-weight: 700;
-    letter-spacing: -0.02em;
-    color: var(--text-color, #1a2f24);
+    letter-spacing: 0.05em;
+    padding: 0.25rem 0.6rem;
+    border: 1px solid var(--color-border);
+    background-color: var(--text-primary);
+    color: var(--bg-primary);
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+
+  .modal-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    text-align: left;
+  }
+
+  .modal-card-title {
+    font-family: var(--font-subheading);
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.25;
+    letter-spacing: 0.01em;
     margin: 0;
   }
 
-  .modal-body {
-    font-size: 0.95rem;
-    color: var(--text-muted, #556c60);
+  .modal-card-desc {
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    color: var(--text-muted);
     line-height: 1.5;
-    margin-bottom: 2rem;
+    margin: 0;
   }
 
-  .modal-body-wrapper {
-    width: 100%;
-  }
-
-  .modal-footer {
+  .modal-card-footer {
     display: flex;
-    gap: 1rem;
-    justify-content: center;
+    justify-content: flex-end;
+    gap: 0.8rem;
   }
 
-  .modal-footer button {
-    padding: 0.8rem 1.5rem;
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 700;
+  .modal-card-footer .brutalist-btn {
+    font-size: 0.78rem;
+    padding: 0.5rem 1.2rem;
+    border-radius: 0;
     cursor: pointer;
+    box-shadow: 2px 2px 0px var(--color-border);
+    transition: all 0.15s ease;
   }
 
-  .modal-footer .btn-secondary {
-    background: rgba(var(--sage-rgb, 107, 138, 122), 0.1);
-    border-color: var(--border-color, #1a2f24);
+  .modal-card-footer .brutalist-btn:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0px var(--color-border);
   }
 
-  .modal-footer .btn-danger {
+  .modal-card-footer .brutalist-btn:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0px var(--color-border);
+  }
+
+  .modal-card-footer .btn-cancel {
+    background: transparent;
+    color: var(--text-secondary);
+  }
+
+  .modal-card-footer .btn-cancel:hover {
+    background: rgba(18, 28, 21, 0.05);
+  }
+
+  .modal-card-footer .btn-danger-brutal {
     background: #ef4444;
     color: white;
-    border-color: var(--border-color, #1a2f24);
-    box-shadow: 4px 4px 0 var(--border-color, #1a2f24);
+    border-color: var(--color-border);
   }
 
-  .modal-footer .btn-danger:hover {
+  .modal-card-footer .btn-danger-brutal:hover {
     background: #dc2626;
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0 var(--border-color, #1a2f24);
-  }
-
-  .modal-footer .btn-danger:active {
-    transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0 var(--border-color, #1a2f24);
-  }
-
-  @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.08); }
-    100% { transform: scale(1); }
   }
 
   /* --- RESPONSIVE ADJUSTMENTS --- */
