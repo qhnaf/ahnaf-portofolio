@@ -1,6 +1,6 @@
-import { c as createComponent } from './astro-component_BCkG7jLL.mjs';
+import { c as createComponent } from './astro-component_HuT8LO8d.mjs';
 import 'piccolore';
-import { k as createRenderInstruction, p as maybeRenderHead, u as renderTemplate, q as renderComponent, t as renderSlot, s as renderHead, j as addAttribute } from './entrypoint_BafcW3vQ.mjs';
+import { k as createRenderInstruction, p as maybeRenderHead, u as renderTemplate, q as renderComponent, t as renderSlot, s as renderHead, j as addAttribute } from './entrypoint_C1MkF1mn.mjs';
 import 'clsx';
 import postgres from 'postgres';
 import fs from 'node:fs';
@@ -73,8 +73,8 @@ const $$Gallery = createComponent(async ($$result, $$props, $$slots) => {
   const isAuthenticated = Astro2.cookies.get("gallery_session")?.value === "authenticated_secret_session_token";
   let images = [];
   let errorMsg = null;
-  const dbUrl = process.env.DATABASE_URL || "";
-  const isDbConnected = !!dbUrl;
+  const dbUrl = process.env.DATABASE_URL || "postgres://postgres.lanzbkdtbeypsgsfvzsw:learning345!%25100@aws-1-ap-northeast-1.pooler.supabase.com:6543/postgres";
+  const isDbConnected = true;
   if (isAuthenticated) {
     try {
       if (isDbConnected) {
@@ -89,19 +89,6 @@ const $$Gallery = createComponent(async ($$result, $$props, $$slots) => {
           uploadedAt: row.created_at
         }));
         await sql.end();
-      } else {
-        const localDir = nodePath.join(process.cwd(), "public", "gallery-simulated");
-        if (fs.existsSync(localDir)) {
-          const files = fs.readdirSync(localDir);
-          images = files.filter((file) => /\.(jpg|jpeg|png|gif|webp)$/i.test(file)).map((file) => {
-            const stats = fs.statSync(nodePath.join(localDir, file));
-            return {
-              url: `/gallery-simulated/${file}`,
-              pathname: `gallery-simulated/${file}`,
-              uploadedAt: stats.mtime
-            };
-          }).sort((a, b) => b.uploadedAt.getTime() - a.uploadedAt.getTime());
-        }
       }
     } catch (err) {
       console.error("Gagal mengambil daftar foto:", err);
@@ -117,7 +104,7 @@ MASUK
     /* --- SCREEN UTAMA GALERI PRIVAT --- */
     renderTemplate`<div class="gallery-container" data-astro-cid-sahthylw> <div class="gallery-header scroll-reveal active" data-astro-cid-sahthylw> <div class="header-left" data-astro-cid-sahthylw> <h1 class="gallery-title" data-astro-cid-sahthylw>07 / PRIVATE VAULT</h1> <p class="gallery-subtitle" data-astro-cid-sahthylw>
 Galeri foto dan dokumentasi privat Ahnaf.
-${isDbConnected ? renderTemplate`<span class="mode-badge db" data-astro-cid-sahthylw>PostgreSQL</span>` : renderTemplate`<span class="mode-badge" data-astro-cid-sahthylw>Simulasi Lokal</span>`} </p> </div> <button id="btnLogout" class="btn-logout glass-btn" data-astro-cid-sahthylw>
+${renderTemplate`<span class="mode-badge db" data-astro-cid-sahthylw>PostgreSQL</span>` } </p> </div> <button id="btnLogout" class="btn-logout glass-btn" data-astro-cid-sahthylw>
 LOGOUT
 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-sahthylw> <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" data-astro-cid-sahthylw></path> <polyline points="16 17 21 12 16 7" data-astro-cid-sahthylw></polyline> <line x1="21" y1="12" x2="9" y2="12" data-astro-cid-sahthylw></line> </svg> </button> </div> ${errorMsg && renderTemplate`<div class="error-banner" data-astro-cid-sahthylw>${errorMsg}</div>`} <!-- Panel Upload Area --> <div class="upload-panel glass-card scroll-reveal active" data-astro-cid-sahthylw> <h3 class="panel-title" data-astro-cid-sahthylw>Unggah Foto Baru</h3> <form id="uploadForm" class="upload-form" data-astro-cid-sahthylw> <label class="drop-zone" id="dropZone" data-astro-cid-sahthylw> <input type="file" id="fileInput" name="file" accept="image/*" required style="display: none;" data-astro-cid-sahthylw> <div class="drop-zone-content" data-astro-cid-sahthylw> <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="upload-icon" data-astro-cid-sahthylw> <rect x="3" y="3" width="18" height="18" rx="2" ry="2" data-astro-cid-sahthylw></rect> <circle cx="8.5" cy="8.5" r="1.5" data-astro-cid-sahthylw></circle> <polyline points="21 15 16 10 5 21" data-astro-cid-sahthylw></polyline> </svg> <span class="drop-text" id="dropText" data-astro-cid-sahthylw>Klik atau Seret file foto ke sini</span> <span class="file-info" id="fileInfo" data-astro-cid-sahthylw>Mendukung format JPG, PNG, WEBP, GIF</span> </div> </label> <div id="uploadFeedback" class="upload-feedback" data-astro-cid-sahthylw></div> <button type="submit" id="btnUploadSubmit" class="btn-upload glass-btn" disabled data-astro-cid-sahthylw>
 UNGGAH FOTO

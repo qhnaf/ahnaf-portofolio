@@ -25,7 +25,7 @@ async function POST({ request, cookies }) {
     const randomName = `${crypto.randomUUID()}.${extension}`;
     const filename = `gallery/${randomName}`;
     const hasBlobToken = !!(process.env.BLOB_READ_WRITE_TOKEN || undefined                                     );
-    const dbUrl = process.env.DATABASE_URL || "";
+    const dbUrl = process.env.DATABASE_URL || "postgres://postgres.lanzbkdtbeypsgsfvzsw:learning345!%25100@aws-1-ap-northeast-1.pooler.supabase.com:6543/postgres";
     const isDbConnected = !!dbUrl;
     let finalUrl = "";
     if (hasBlobToken) {

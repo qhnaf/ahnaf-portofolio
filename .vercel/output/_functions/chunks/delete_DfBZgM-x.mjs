@@ -21,7 +21,7 @@ async function POST({ request, cookies }) {
       });
     }
     const hasBlobToken = !!(process.env.BLOB_READ_WRITE_TOKEN || undefined                                     );
-    const dbUrl = process.env.DATABASE_URL || "";
+    const dbUrl = process.env.DATABASE_URL || "postgres://postgres.lanzbkdtbeypsgsfvzsw:learning345!%25100@aws-1-ap-northeast-1.pooler.supabase.com:6543/postgres";
     const isDbConnected = !!dbUrl;
     if (isDbConnected) {
       const sql = postgres(dbUrl, { ssl: "require" });
