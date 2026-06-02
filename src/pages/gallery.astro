@@ -55,7 +55,7 @@ if (isAuthenticated) {
 }
 ---
 
-<Layout title="Gallery | Private Vault" description="Galeri foto privat terproteksi sandi.">
+<Layout title="Gallery | Private Vault" description="Galeri foto privat terproteksi sandi." hideHeader={true}>
   <!-- Elemen Ambient Glows Latar Belakang -->
   <div class="ambient-glows">
     <div class="glow-sphere sphere-teal"></div>
@@ -763,11 +763,6 @@ if (isAuthenticated) {
   const uploadFeedback = document.getElementById('uploadFeedback');
 
   if (dropZone && fileInput) {
-    // Sync input clicks
-    dropZone.addEventListener('click', () => {
-      fileInput.click();
-    });
-
     // Prevent default drag behaviors
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
       dropZone.addEventListener(eventName, (e) => e.preventDefault(), false);

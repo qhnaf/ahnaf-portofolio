@@ -6,11 +6,13 @@ import Footer from '../components/Footer.astro';
 interface Props {
   title?: string;
   description?: string;
+  hideHeader?: boolean;
 }
 
 const { 
   title = "Ahnaf | Neo-Brutalist Developer Portfolio", 
-  description = "Selamat datang di portofolio digital Ahnaf. Web developer dengan konsep Neo-Brutalist Sage Green yang ramping, interaktif, dan berperforma tinggi."
+  description = "Selamat datang di portofolio digital Ahnaf. Web developer dengan konsep Neo-Brutalist Sage Green yang ramping, interaktif, dan berperforma tinggi.",
+  hideHeader = false
 } = Astro.props;
 ---
 
@@ -61,7 +63,7 @@ const {
   </head>
   <body>
     <!-- Global Header -->
-    <Header />
+    {!hideHeader && <Header />}
 
     <!-- Main Content -->
     <main>
