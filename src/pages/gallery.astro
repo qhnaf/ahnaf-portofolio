@@ -1,0 +1,932 @@
+---
+import Layout from '../layouts/Layout.astro';
+import postgres from 'postgres';
+import fs from 'node:fs';
+import path from 'node:path';
+
+export const prerender = false;
+
+// Cek status autentikasi di server
+const isAuthenticated = Astro.cookies.get("gallery_session")?.value === "authenticated_secret_session_token";
+
+let images = [];
+let errorMsg = null;
+const dbUrl = process.env.DATABASE_URL || import.meta.env.DATABASE_URL;
+const isDbConnected = !!dbUrl;
+
+if (isAuthenticated) {
+  try {
+    if (isDbConnected) {
+      // MODE DATABASE: Ambil metadata dari PostgreSQL (Supabase/Neon)
+      const sql = postgres(dbUrl, { ssl: 'require' });
+      const rows = await sql`
+        SELECT url, created_at 
+        FROM photos 
+        ORDER BY created_at DESC;
+      `;
+      images = rows.map(row => ({
+        url: row.url,
+        uploadedAt: row.created_at
+      }));
+      // Tutup koneksi pool
+      await sql.end();
+    } else {
+      // MODE SIMULASI LOKAL: Baca dari folder lokal public/gallery-simulated
+      const localDir = path.join(process.cwd(), 'public', 'gallery-simulated');
+      if (fs.existsSync(localDir)) {
+        const files = fs.readdirSync(localDir);
+        images = files
+          .filter(file => /\.(jpg|jpeg|png|gif|webp)$/i.test(file))
+          .map(file => {
+            const stats = fs.statSync(path.join(localDir, file));
+            return {
+              url: `/gallery-simulated/${file}`,
+              pathname: `gallery-simulated/${file}`,
+              uploadedAt: stats.mtime
+            };
+          })
+          .sort((a, b) => b.uploadedAt.getTime() - a.uploadedAt.getTime());
+      }
+    }
+  } catch (err) {
+    console.error("Gagal mengambil daftar foto:", err);
+    errorMsg = "Gagal memuat galeri foto: " + err.message;
+  }
+}
+---
+
+<Layout title="Gallery | Private Vault" description="Galeri foto privat terproteksi sandi.">
+  <!-- Elemen Ambient Glows Latar Belakang -->
+  <div class="ambient-glows">
+    <div class="glow-sphere sphere-teal"></div>
+    <div class="glow-sphere sphere-violet"></div>
+  </div>
+
+  <section class="gallery-section">
+    {!isAuthenticated ? (
+      /* --- SCREEN LOGIN (LOCKSCREEN) --- */
+      <div class="lockscreen-container">
+        <div class="lockscreen-card glass-card">
+          <div class="lock-icon-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lock-icon">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </div>
+          <h2 class="lock-title">07 / PRIVATE VAULT</h2>
+          <p class="lock-subtitle">Masukkan kata sandi untuk mengakses galeri foto privat.</p>
+          
+          <form id="loginForm" class="lock-form">
+            <div class="input-group">
+              <input type="password" id="passwordInput" placeholder="Ketik kata sandi..." required autocomplete="current-password" />
+              <div class="input-line"></div>
+            </div>
+            
+            <div id="loginError" class="error-message"></div>
+            
+            <button type="submit" class="btn-login glass-btn">
+              MASUK
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </form>
+        </div>
+      </div>
+    ) : (
+      /* --- SCREEN UTAMA GALERI PRIVAT --- */
+      <div class="gallery-container">
+        <div class="gallery-header scroll-reveal active">
+          <div class="header-left">
+            <h1 class="gallery-title">07 / PRIVATE VAULT</h1>
+            <p class="gallery-subtitle">
+              Galeri foto dan dokumentasi privat Ahnaf. 
+              {isDbConnected ? (
+                <span class="mode-badge db">PostgreSQL</span>
+              ) : (
+                <span class="mode-badge">Simulasi Lokal</span>
+              )}
+            </p>
+          </div>
+          <button id="btnLogout" class="btn-logout glass-btn">
+            LOGOUT
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+          </button>
+        </div>
+
+        {errorMsg && <div class="error-banner">{errorMsg}</div>}
+
+        <!-- Panel Upload Area -->
+        <div class="upload-panel glass-card scroll-reveal active">
+          <h3 class="panel-title">Unggah Foto Baru</h3>
+          <form id="uploadForm" class="upload-form">
+            <label class="drop-zone" id="dropZone">
+              <input type="file" id="fileInput" name="file" accept="image/*" required style="display: none;" />
+              <div class="drop-zone-content">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="upload-icon">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                <span class="drop-text" id="dropText">Klik atau Seret file foto ke sini</span>
+                <span class="file-info" id="fileInfo">Mendukung format JPG, PNG, WEBP, GIF</span>
+              </div>
+            </label>
+            
+            <div id="uploadFeedback" class="upload-feedback"></div>
+            
+            <button type="submit" id="btnUploadSubmit" class="btn-upload glass-btn" disabled>
+              UNGGAH FOTO
+            </button>
+          </form>
+        </div>
+
+        <!-- Grid Foto -->
+        <div class="photos-grid scroll-reveal active">
+          {images.length === 0 ? (
+            <div class="empty-state glass-card">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="8.5" y1="8.5" x2="8.51" y2="8.5"></line>
+                <path d="M21 15l-5-5L5 21"></path>
+              </svg>
+              <p>Belum ada foto yang diunggah.</p>
+            </div>
+          ) : (
+            images.map((img) => (
+              <div class="photo-card glass-card" data-url={img.url}>
+                <div class="img-wrapper">
+                  <img src={img.url} alt="Gallery Photo" loading="lazy" class="gallery-img" />
+                </div>
+                <div class="card-footer">
+                  <span class="date-text">
+                    {new Date(img.uploadedAt).toLocaleDateString('id-ID', {
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric'
+                    })}
+                  </span>
+                  
+                  <button class="btn-delete" data-url={img.url} title="Hapus Foto">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                      <line x1="10" y1="11" x2="10" y2="17"></line>
+                      <line x1="14" y1="11" x2="14" y2="17"></line>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+    )}
+  </section>
+
+  <!-- Lightbox Modal untuk Preview Foto -->
+  <div id="lightbox" class="lightbox-modal">
+    <button class="lightbox-close" id="lightboxClose">&times;</button>
+    <div class="lightbox-content">
+      <img id="lightboxImg" src="" alt="Lightbox Preview" />
+    </div>
+  </div>
+</Layout>
+
+<style>
+  /* --- BASE SETUP & CONTAINERS --- */
+  .gallery-section {
+    min-height: calc(100vh - 180px);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 8rem 2rem 4rem;
+    position: relative;
+    z-index: 10;
+  }
+
+  .ambient-glows {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .glow-sphere {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.15;
+    transition: all 0.5s ease;
+  }
+
+  .sphere-teal {
+    width: 400px;
+    height: 400px;
+    background: var(--neon-teal, #14b8a6);
+    top: 15%;
+    left: 10%;
+  }
+
+  .sphere-violet {
+    width: 500px;
+    height: 500px;
+    background: var(--neon-violet, #8b5cf6);
+    bottom: 10%;
+    right: 5%;
+  }
+
+  /* --- LOCKSCREEN (LOGIN CARD) --- */
+  .lockscreen-container {
+    width: 100%;
+    max-width: 480px;
+    margin-top: 5vh;
+  }
+
+  .lockscreen-card {
+    padding: 3rem 2.5rem;
+    text-align: center;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .lock-icon-wrapper {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: rgba(var(--sage-rgb, 107, 138, 122), 0.1);
+    border: 2px solid var(--border-color, #1a2f24);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+    color: var(--neon-violet, #8b5cf6);
+    box-shadow: 4px 4px 0 var(--border-color, #1a2f24);
+  }
+
+  .lock-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text-color, #1a2f24);
+    margin-bottom: 0.8rem;
+  }
+
+  .lock-subtitle {
+    font-size: 0.95rem;
+    color: var(--text-muted, #556c60);
+    line-height: 1.5;
+    margin-bottom: 2.5rem;
+  }
+
+  .lock-form {
+    width: 100%;
+  }
+
+  .input-group {
+    position: relative;
+    width: 100%;
+    margin-bottom: 1.5rem;
+  }
+
+  .input-group input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    padding: 1rem 0.5rem;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 1.1rem;
+    color: var(--text-color, #1a2f24);
+    outline: none;
+    text-align: center;
+  }
+
+  .input-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--border-color, #1a2f24);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .input-group input:focus ~ .input-line {
+    background: var(--neon-violet, #8b5cf6);
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
+  }
+
+  .error-message {
+    color: #e11d48;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    min-height: 1.2rem;
+  }
+
+  .btn-login {
+    width: 100%;
+    padding: 1.1rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.8rem;
+    cursor: pointer;
+  }
+
+  .btn-login svg {
+    transition: transform 0.2s ease;
+  }
+
+  .btn-login:hover svg {
+    transform: translateX(4px);
+  }
+
+  /* --- GALLERY DASHBOARD --- */
+  .gallery-container {
+    width: 100%;
+    max-width: 1100px;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .gallery-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 2px solid var(--border-color, #1a2f24);
+    padding-bottom: 1.5rem;
+    gap: 1.5rem;
+  }
+
+  .gallery-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text-color, #1a2f24);
+    margin-bottom: 0.5rem;
+  }
+
+  .gallery-subtitle {
+    font-size: 1rem;
+    color: var(--text-muted, #556c60);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+  }
+
+  .mode-badge {
+    background: rgba(139, 92, 246, 0.15);
+    color: var(--neon-violet, #8b5cf6);
+    border: 1px solid var(--neon-violet, #8b5cf6);
+    padding: 0.2rem 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 6px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .mode-badge.db {
+    background: rgba(51, 104, 152, 0.15);
+    color: #336791;
+    border: 1px solid #336791;
+  }
+
+  .btn-logout {
+    padding: 0.7rem 1.2rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  /* --- UPLOAD PANEL --- */
+  .upload-panel {
+    padding: 2rem;
+    border-radius: 16px;
+  }
+
+  .panel-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+    color: var(--text-color, #1a2f24);
+  }
+
+  .drop-zone {
+    border: 2px dashed rgba(var(--sage-rgb, 107, 138, 122), 0.4);
+    border-radius: 12px;
+    padding: 3rem 2rem;
+    text-align: center;
+    cursor: pointer;
+    display: block;
+    background: rgba(255, 255, 255, 0.02);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .drop-zone:hover, .drop-zone.dragover {
+    border-color: var(--neon-teal, #14b8a6);
+    background: rgba(var(--sage-rgb, 107, 138, 122), 0.05);
+  }
+
+  .drop-zone-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .upload-icon {
+    color: var(--text-muted, #556c60);
+    transition: transform 0.3s ease;
+  }
+
+  .drop-zone:hover .upload-icon {
+    transform: translateY(-4px);
+    color: var(--neon-teal, #14b8a6);
+  }
+
+  .drop-text {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--text-color, #1a2f24);
+  }
+
+  .file-info {
+    font-size: 0.8rem;
+    color: var(--text-muted, #556c60);
+  }
+
+  .upload-feedback {
+    min-height: 1.5rem;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .upload-feedback.success {
+    color: #10b981;
+  }
+
+  .upload-feedback.error {
+    color: #e11d48;
+  }
+
+  .upload-feedback.loading {
+    color: var(--neon-violet, #8b5cf6);
+  }
+
+  .btn-upload {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 1rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 0.95rem;
+  }
+
+  .btn-upload:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
+
+  /* --- PHOTOS GRID --- */
+  .photos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .empty-state {
+    grid-column: 1 / -1;
+    padding: 5rem 2rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    color: var(--text-muted, #556c60);
+  }
+
+  .empty-state svg {
+    opacity: 0.6;
+    margin-bottom: 0.5rem;
+  }
+
+  .photo-card {
+    padding: 0;
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    cursor: pointer;
+  }
+
+  .photo-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-brutal, 6px 6px 0 #1a2f24);
+  }
+
+  .img-wrapper {
+    width: 100%;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    border-bottom: 2px solid var(--border-color, #1a2f24);
+    background: rgba(0,0,0,0.05);
+  }
+
+  .gallery-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .photo-card:hover .gallery-img {
+    transform: scale(1.05);
+  }
+
+  .card-footer {
+    padding: 1rem 1.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.01);
+  }
+
+  .date-text {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted, #556c60);
+  }
+
+  .btn-delete {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 20;
+  }
+
+  .btn-delete:hover {
+    background: #ef4444;
+    color: white;
+    border-color: #ef4444;
+  }
+
+  .error-banner {
+    background: rgba(225, 29, 72, 0.1);
+    color: #e11d48;
+    border: 1.5px solid #e11d48;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  /* --- LIGHTBOX MODAL --- */
+  .lightbox-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    z-index: 100000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .lightbox-modal.active {
+    display: flex;
+    opacity: 1;
+  }
+
+  .lightbox-content {
+    max-width: 90%;
+    max-height: 85%;
+    position: relative;
+    border: 3px solid var(--border-color, #1a2f24);
+    box-shadow: 10px 10px 0 rgba(0,0,0,0.5);
+    background: black;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .lightbox-content img {
+    max-width: 100%;
+    max-height: 80vh;
+    display: block;
+    object-fit: contain;
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 3rem;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+
+  .lightbox-close:hover {
+    transform: rotate(90deg) scale(1.1);
+  }
+
+  /* --- RESPONSIVE ADJUSTMENTS --- */
+  @media (max-width: 768px) {
+    .gallery-section {
+      padding: 6rem 1.2rem 3rem;
+    }
+    
+    .gallery-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    
+    .btn-logout {
+      width: 100%;
+      justify-content: center;
+    }
+    
+    .photos-grid {
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.2rem;
+    }
+    
+    .lockscreen-card {
+      padding: 2rem 1.5rem;
+    }
+  }
+</style>
+
+<script>
+  // --- CLIENT LOGIC ---
+
+  // Handle Login
+  const loginForm = document.getElementById('loginForm');
+  const passwordInput = document.getElementById('passwordInput') as HTMLInputElement;
+  const loginError = document.getElementById('loginError');
+
+  if (loginForm) {
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      loginError!.textContent = '';
+      
+      const password = passwordInput.value;
+      
+      try {
+        const response = await fetch('/api/auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          window.location.reload();
+        } else {
+          loginError!.textContent = result.message || 'Password salah!';
+        }
+      } catch (err) {
+        loginError!.textContent = 'Terjadi kesalahan sistem, silakan coba lagi.';
+      }
+    });
+  }
+
+  // Handle Logout
+  const btnLogout = document.getElementById('btnLogout');
+  if (btnLogout) {
+    btnLogout.addEventListener('click', async () => {
+      try {
+        const response = await fetch('/api/logout', { method: 'POST' });
+        if (response.ok) {
+          window.location.reload();
+        }
+      } catch (err) {
+        console.error('Logout error:', err);
+      }
+    });
+  }
+
+  // Handle File Input & Dragover Area
+  const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+  const dropZone = document.getElementById('dropZone');
+  const dropText = document.getElementById('dropText');
+  const btnUploadSubmit = document.getElementById('btnUploadSubmit') as HTMLButtonElement;
+  const uploadForm = document.getElementById('uploadForm');
+  const uploadFeedback = document.getElementById('uploadFeedback');
+
+  if (dropZone && fileInput) {
+    // Sync input clicks
+    dropZone.addEventListener('click', () => {
+      fileInput.click();
+    });
+
+    // Prevent default drag behaviors
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, (e) => e.preventDefault(), false);
+    });
+
+    // Visual drag indicators
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropZone.addEventListener(eventName, () => dropZone.classList.add('dragover'), false);
+    });
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, () => dropZone.classList.remove('dragover'), false);
+    });
+
+    // Drop file handler
+    dropZone.addEventListener('drop', (e: DragEvent) => {
+      const dt = e.dataTransfer;
+      const files = dt?.files;
+      if (files && files.length > 0) {
+        fileInput.files = files;
+        updateFileInfo(files[0]);
+      }
+    });
+
+    // Selection change handler
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files && fileInput.files.length > 0) {
+        updateFileInfo(fileInput.files[0]);
+      }
+    });
+  }
+
+  function updateFileInfo(file: File) {
+    if (dropText && btnUploadSubmit) {
+      dropText.textContent = `File dipilih: ${file.name}`;
+      btnUploadSubmit.disabled = false;
+    }
+  }
+
+  // Handle Upload Submission
+  if (uploadForm) {
+    uploadForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!fileInput.files || fileInput.files.length === 0) return;
+
+      const formData = new FormData();
+      formData.append('file', fileInput.files[0]);
+
+      setUploadState('loading', 'Mengunggah foto...');
+
+      try {
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          setUploadState('success', 'Foto berhasil diunggah! Memuat ulang...');
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        } else {
+          setUploadState('error', result.message || 'Gagal mengunggah foto.');
+        }
+      } catch (err) {
+        setUploadState('error', 'Kesalahan koneksi saat mengunggah.');
+      }
+    });
+  }
+
+  function setUploadState(state: 'idle' | 'loading' | 'success' | 'error', text = '') {
+    if (!uploadFeedback || !btnUploadSubmit) return;
+    
+    uploadFeedback.className = `upload-feedback ${state}`;
+    uploadFeedback.textContent = text;
+    
+    if (state === 'loading') {
+      btnUploadSubmit.disabled = true;
+      btnUploadSubmit.textContent = 'MENGUNGGAH...';
+    } else {
+      btnUploadSubmit.textContent = 'UNGGAH FOTO';
+      if (state !== 'success') {
+        btnUploadSubmit.disabled = false;
+      }
+    }
+  }
+
+  // Handle Delete File
+  const deleteButtons = document.querySelectorAll('.btn-delete');
+  deleteButtons.forEach(button => {
+    button.addEventListener('click', async (e) => {
+      e.stopPropagation(); // Cegah membuka lightbox modal
+      const url = (button as HTMLElement).dataset.url;
+      
+      if (!url) return;
+      
+      const confirmDelete = confirm('Apakah Anda yakin ingin menghapus foto privat ini? Tindakan ini tidak dapat dibatalkan.');
+      if (!confirmDelete) return;
+
+      try {
+        const response = await fetch('/api/delete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url })
+        });
+
+        const result = await response.ok ? await response.json() : null;
+
+        if (result && result.success) {
+          window.location.reload();
+        } else {
+          alert('Gagal menghapus foto.');
+        }
+      } catch (err) {
+        alert('Terjadi kesalahan jaringan.');
+      }
+    });
+  });
+
+  // Handle Lightbox Preview
+  const photoCards = document.querySelectorAll('.photo-card');
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg') as HTMLImageElement;
+  const lightboxClose = document.getElementById('lightboxClose');
+
+  photoCards.forEach(card => {
+    card.addEventListener('click', () => {
+      const img = card.querySelector('.gallery-img') as HTMLImageElement;
+      if (img && lightbox && lightboxImg) {
+        lightboxImg.src = img.src;
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+    });
+  });
+
+  function closeLightbox() {
+    if (lightbox) {
+      lightbox.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+  }
+
+  if (lightboxClose) {
+    lightboxClose.addEventListener('click', closeLightbox);
+  }
+  if (lightbox) {
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) {
+        closeLightbox();
+      }
+    });
+  }
+
+  // Escape key to close lightbox
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeLightbox();
+    }
+  });
+</script>
