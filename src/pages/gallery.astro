@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import postgres from 'postgres';
 import fs from 'node:fs';
 import path from 'node:path';
+import { list } from '@vercel/blob';
 
 export const prerender = false;
 
@@ -11,8 +12,11 @@ const isAuthenticated = Astro.cookies.get("gallery_session")?.value === "authent
 
 let images = [];
 let errorMsg = null;
+let totalStorageBytes = 0;
+
 const dbUrl = process.env.DATABASE_URL || import.meta.env.DATABASE_URL;
 const isDbConnected = !!dbUrl;
+const hasBlobToken = !!(process.env.BLOB_READ_WRITE_TOKEN || import.meta.env.BLOB_READ_WRITE_TOKEN);
 
 if (isAuthenticated) {
   try {
@@ -30,6 +34,28 @@ if (isAuthenticated) {
       }));
       // Tutup koneksi pool
       await sql.end();
+
+      // Hitung total size jika token Blob tersedia
+      if (hasBlobToken) {
+        try {
+          const response = await list({ prefix: 'gallery/' });
+          totalStorageBytes = response.blobs.reduce((sum, blob) => sum + blob.size, 0);
+        } catch (blobErr) {
+          console.error("Gagal mengambil ukuran storage dari Vercel Blob:", blobErr);
+        }
+      } else {
+        // Jika tidak ada token Blob (berjalan lokal dengan DB), hitung dari folder local public/gallery-simulated
+        const localDir = path.join(process.cwd(), 'public', 'gallery-simulated');
+        if (fs.existsSync(localDir)) {
+          const files = fs.readdirSync(localDir);
+          files.forEach(file => {
+            if (/\.(jpg|jpeg|png|gif|webp)$/i.test(file)) {
+              const stats = fs.statSync(path.join(localDir, file));
+              totalStorageBytes += stats.size;
+            }
+          });
+        }
+      }
     } else {
       // MODE SIMULASI LOKAL: Baca dari folder lokal public/gallery-simulated
       const localDir = path.join(process.cwd(), 'public', 'gallery-simulated');
@@ -39,6 +65,7 @@ if (isAuthenticated) {
           .filter(file => /\.(jpg|jpeg|png|gif|webp)$/i.test(file))
           .map(file => {
             const stats = fs.statSync(path.join(localDir, file));
+            totalStorageBytes += stats.size;
             return {
               url: `/gallery-simulated/${file}`,
               pathname: `gallery-simulated/${file}`,
@@ -53,6 +80,12 @@ if (isAuthenticated) {
     errorMsg = "Gagal memuat galeri foto: " + err.message;
   }
 }
+
+// Format bytes ke format human-readable (MB)
+const maxStorageBytes = 250 * 1024 * 1024; // 250 MB
+const formattedUsedStorage = (totalStorageBytes / (1024 * 1024)).toFixed(2);
+const formattedMaxStorage = "250.00";
+const storagePercentage = Math.min(((totalStorageBytes / maxStorageBytes) * 100), 100).toFixed(1);
 ---
 
 <Layout title="Gallery | Private Vault" description="Galeri foto privat terproteksi sandi." hideHeader={true}>
@@ -108,6 +141,14 @@ if (isAuthenticated) {
                 <span class="mode-badge">Simulasi Lokal</span>
               )}
             </p>
+            <div class="storage-indicator-wrapper">
+              <div class="storage-info">
+                <span>Penyimpanan: <strong>{formattedUsedStorage} MB</strong> / {formattedMaxStorage} MB ({storagePercentage}%)</span>
+              </div>
+              <div class="storage-bar-bg">
+                <div class="storage-bar-fill" style={`width: ${storagePercentage}%`}></div>
+              </div>
+            </div>
           </div>
           <button id="btnLogout" class="btn-logout glass-btn">
             LOGOUT
@@ -158,31 +199,37 @@ if (isAuthenticated) {
               <p>Belum ada foto yang diunggah.</p>
             </div>
           ) : (
-            images.map((img) => (
-              <div class="photo-card brutalist-card" data-url={img.url}>
-                <div class="img-wrapper">
-                  <img src={img.url} alt="Gallery Photo" loading="lazy" class="gallery-img" />
+            images.map((img, idx) => {
+              const photoIndex = String(images.length - idx).padStart(2, '0');
+              return (
+                <div class="photo-card" data-url={img.url}>
+                  <div class="img-wrapper">
+                    <img src={img.url} alt="Gallery Photo" loading="lazy" class="gallery-img" />
+                  </div>
+                  <div class="photo-info-overlay">
+                    <div class="info-overlay-left">
+                      <span class="photo-index">{photoIndex}</span>
+                      <span class="photo-date">
+                        {new Date(img.uploadedAt).toLocaleDateString('id-ID', {
+                          day: 'numeric',
+                          month: 'short',
+                          year: 'numeric'
+                        })}
+                      </span>
+                    </div>
+                    
+                    <button class="btn-delete" data-url={img.url} title="Hapus Foto">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
-                <div class="card-footer">
-                  <span class="date-text">
-                    {new Date(img.uploadedAt).toLocaleDateString('id-ID', {
-                      day: 'numeric',
-                      month: 'short',
-                      year: 'numeric'
-                    })}
-                  </span>
-                  
-                  <button class="btn-delete" data-url={img.url} title="Hapus Foto">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <polyline points="3 6 5 6 21 6"></polyline>
-                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                      <line x1="10" y1="11" x2="10" y2="17"></line>
-                      <line x1="14" y1="11" x2="14" y2="17"></line>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
       </div>
@@ -430,6 +477,42 @@ if (isAuthenticated) {
     border: 1px solid #336791;
   }
 
+  .storage-indicator-wrapper {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    max-width: 320px;
+    width: 100%;
+  }
+
+  .storage-info {
+    font-size: 0.82rem;
+    color: var(--text-muted, #556c60);
+    font-family: var(--font-subheading), sans-serif;
+  }
+
+  .storage-info strong {
+    color: var(--text-primary, #121c15);
+  }
+
+  .storage-bar-bg {
+    width: 100%;
+    height: 6px;
+    background: rgba(18, 28, 21, 0.08);
+    border: 1px solid var(--color-border, #121c15);
+    position: relative;
+    border-radius: 0px;
+    overflow: hidden;
+  }
+
+  .storage-bar-fill {
+    height: 100%;
+    background: var(--color-accent, #6d5b97);
+    transition: width 0.5s ease-out;
+  }
+
+
   .btn-logout {
     padding: 0.7rem 1.2rem;
     font-family: 'Space Grotesk', sans-serif;
@@ -577,11 +660,18 @@ if (isAuthenticated) {
     margin-bottom: 2rem;
     break-inside: avoid;
     padding: 0;
-    border-radius: 0px; /* Sharp corners like Certifications.astro */
+    border-radius: 0px;
+    border: none; /* Borderless like reference */
+    box-shadow: none; /* Shadowless like reference */
     overflow: hidden;
     position: relative;
     cursor: pointer;
-    transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+    background: rgba(18, 28, 21, 0.03);
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .photo-card:hover {
+    transform: translateY(-4px); /* Premium micro-animation hover */
   }
 
   /* Overlay vignette shadow on bottom of the image */
@@ -591,8 +681,8 @@ if (isAuthenticated) {
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 50%;
-    background: linear-gradient(to top, rgba(18, 28, 21, 0.85) 0%, rgba(18, 28, 21, 0) 100%);
+    height: 55%;
+    background: linear-gradient(to top, rgba(12, 19, 15, 0.9) 0%, rgba(12, 19, 15, 0.4) 40%, rgba(12, 19, 15, 0) 100%);
     pointer-events: none;
     transition: opacity 0.3s ease;
     z-index: 2;
@@ -602,47 +692,63 @@ if (isAuthenticated) {
     width: 100%;
     height: auto;
     overflow: hidden;
-    background: rgba(0,0,0,0.05);
   }
 
   .gallery-img {
     width: 100%;
     height: auto;
     display: block;
-    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .photo-card:hover .gallery-img {
-    transform: scale(1.04);
+    transform: scale(1.03);
   }
 
-  .card-footer {
+  .photo-info-overlay {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
-    padding: 1.2rem;
+    padding: 1.5rem;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
     z-index: 10;
   }
 
-  .date-text {
+  .info-overlay-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    text-align: left;
+  }
+
+  .photo-index {
+    font-family: Georgia, serif;
+    font-size: 2.2rem;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.95);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  }
+
+  .photo-date {
+    font-family: Georgia, serif;
+    font-style: italic;
     font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--bg-primary, #b4c6b8);
-    font-family: var(--font-subheading);
+    color: rgba(255, 255, 255, 0.7);
     letter-spacing: 0.02em;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   }
 
   .btn-delete {
     background: rgba(239, 68, 68, 0.95);
     color: white;
-    border: 1px solid #ef4444;
-    width: 30px;
-    height: 30px;
+    border: 1.5px solid var(--color-border, #121c15);
+    width: 32px;
+    height: 32px;
     border-radius: 0px; /* Sharp corners */
     display: flex;
     justify-content: center;
@@ -651,8 +757,8 @@ if (isAuthenticated) {
     transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
     z-index: 20;
     opacity: 0;
-    transform: translateY(6px);
-    box-shadow: 2px 2px 0px var(--color-border);
+    transform: translateY(8px);
+    box-shadow: 2px 2px 0px var(--color-border, #121c15);
   }
 
   .photo-card:hover .btn-delete {
@@ -662,9 +768,9 @@ if (isAuthenticated) {
 
   .btn-delete:hover {
     background: #dc2626;
-    border-color: #dc2626;
+    border-color: var(--color-border, #121c15);
     transform: translate(-1px, -1px) !important;
-    box-shadow: 3px 3px 0px var(--color-border);
+    box-shadow: 3px 3px 0px var(--color-border, #121c15);
   }
 
   .error-banner {
@@ -752,16 +858,17 @@ if (isAuthenticated) {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     z-index: 100000;
-    display: none;
+    display: flex;
     justify-content: center;
     align-items: center;
     opacity: 0;
+    visibility: hidden;
     transition: opacity 0.35s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.35s;
   }
 
   .custom-modal.active {
-    display: flex;
     opacity: 1;
+    visibility: visible;
   }
 
   .modal-card.brutalist-card {
@@ -1002,10 +1109,22 @@ if (isAuthenticated) {
     });
   }
 
+  const MAX_FILE_SIZE = 4.5 * 1024 * 1024; // 4.5 MB
+
   function updateFileInfo(file: File) {
-    if (dropText && btnUploadSubmit) {
-      dropText.textContent = `File dipilih: ${file.name}`;
-      btnUploadSubmit.disabled = false;
+    if (dropText && btnUploadSubmit && uploadFeedback) {
+      uploadFeedback.textContent = '';
+      uploadFeedback.className = 'upload-feedback';
+
+      if (file.size > MAX_FILE_SIZE) {
+        dropText.textContent = `File dipilih: ${file.name}`;
+        uploadFeedback.textContent = `Ukuran file terlalu besar (maksimal 4.5 MB). File Anda: ${(file.size / (1024 * 1024)).toFixed(2)} MB.`;
+        uploadFeedback.className = 'upload-feedback error';
+        btnUploadSubmit.disabled = true;
+      } else {
+        dropText.textContent = `File dipilih: ${file.name} (${(file.size / (1024 * 1024)).toFixed(2)} MB)`;
+        btnUploadSubmit.disabled = false;
+      }
     }
   }
 
@@ -1015,8 +1134,14 @@ if (isAuthenticated) {
       e.preventDefault();
       if (!fileInput.files || fileInput.files.length === 0) return;
 
+      const file = fileInput.files[0];
+      if (file.size > MAX_FILE_SIZE) {
+        setUploadState('error', `Ukuran file terlalu besar (maksimal 4.5 MB).`);
+        return;
+      }
+
       const formData = new FormData();
-      formData.append('file', fileInput.files[0]);
+      formData.append('file', file);
 
       setUploadState('loading', 'Mengunggah foto...');
 
@@ -1041,6 +1166,7 @@ if (isAuthenticated) {
       }
     });
   }
+
 
   function setUploadState(state: 'idle' | 'loading' | 'success' | 'error', text = '') {
     if (!uploadFeedback || !btnUploadSubmit) return;
