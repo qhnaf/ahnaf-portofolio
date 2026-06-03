@@ -167,23 +167,28 @@ const storagePercentage = Math.min(((totalStorageBytes / maxStorageBytes) * 100)
           <h3 class="panel-title">Unggah Foto Baru</h3>
           <form id="uploadForm" class="upload-form">
             <label class="drop-zone" id="dropZone">
-              <input type="file" id="fileInput" name="file" accept="image/*" required style="display: none;" />
+              <input type="file" id="fileInput" name="file" accept="image/*" multiple required style="display: none;" />
               <div class="drop-zone-content">
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="upload-icon">
                   <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                   <circle cx="8.5" cy="8.5" r="1.5"></circle>
                   <polyline points="21 15 16 10 5 21"></polyline>
                 </svg>
-                <span class="drop-text" id="dropText">Klik atau Seret file foto ke sini</span>
+                <span class="drop-text" id="dropText">Klik atau Seret beberapa foto ke sini</span>
                 <span class="file-info" id="fileInfo">Mendukung format JPG, PNG, WEBP, GIF</span>
               </div>
             </label>
             
             <div id="uploadFeedback" class="upload-feedback"></div>
             
-            <button type="submit" id="btnUploadSubmit" class="btn-upload glass-btn" disabled>
-              UNGGAH FOTO
-            </button>
+            <div class="upload-buttons">
+              <button type="submit" id="btnUploadSubmit" class="btn-upload glass-btn" disabled>
+                UNGGAH FOTO
+              </button>
+              <button type="button" id="btnUploadClear" class="btn-clear glass-btn" style="display: none;">
+                BATAL
+              </button>
+            </div>
           </form>
         </div>
 
@@ -601,14 +606,23 @@ const storagePercentage = Math.min(((totalStorageBytes / maxStorageBytes) * 100)
     color: var(--neon-violet, #8b5cf6);
   }
 
-  .btn-upload {
-    width: 100%;
+  .upload-buttons {
+    display: flex;
+    gap: 1rem;
     margin-top: 1rem;
+    width: 100%;
+  }
+
+  .btn-upload, .btn-clear {
+    flex: 1;
     padding: 1rem;
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
     cursor: pointer;
     font-size: 0.95rem;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .btn-upload:disabled {
@@ -617,6 +631,22 @@ const storagePercentage = Math.min(((totalStorageBytes / maxStorageBytes) * 100)
     box-shadow: none;
     transform: none;
   }
+
+  .btn-clear {
+    background: rgba(239, 68, 68, 0.08);
+    color: #ef4444;
+    border: 1px dashed rgba(239, 68, 68, 0.4);
+    box-shadow: none;
+    transform: none;
+    transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .btn-clear:hover {
+    background: rgba(239, 68, 68, 0.16);
+    border-color: #ef4444;
+    color: #dc2626;
+  }
+
 
   /* --- PHOTOS GRID (MASONRY LAYOUT) --- */
   .photos-grid {
@@ -1074,8 +1104,11 @@ const storagePercentage = Math.min(((totalStorageBytes / maxStorageBytes) * 100)
   const dropZone = document.getElementById('dropZone');
   const dropText = document.getElementById('dropText');
   const btnUploadSubmit = document.getElementById('btnUploadSubmit') as HTMLButtonElement;
+  const btnUploadClear = document.getElementById('btnUploadClear') as HTMLButtonElement;
   const uploadForm = document.getElementById('uploadForm');
   const uploadFeedback = document.getElementById('uploadFeedback');
+
+  let selectedFiles: File[] = [];
 
   if (dropZone && fileInput) {
     // Prevent default drag behaviors
@@ -1096,74 +1129,114 @@ const storagePercentage = Math.min(((totalStorageBytes / maxStorageBytes) * 100)
       const dt = e.dataTransfer;
       const files = dt?.files;
       if (files && files.length > 0) {
-        fileInput.files = files;
-        updateFileInfo(files[0]);
+        selectedFiles = Array.from(files);
+        updateFilesInfo();
       }
     });
 
     // Selection change handler
     fileInput.addEventListener('change', () => {
       if (fileInput.files && fileInput.files.length > 0) {
-        updateFileInfo(fileInput.files[0]);
+        selectedFiles = Array.from(fileInput.files);
+        updateFilesInfo();
       }
     });
   }
 
   const MAX_FILE_SIZE = 4.5 * 1024 * 1024; // 4.5 MB
 
-  function updateFileInfo(file: File) {
+  function updateFilesInfo() {
     if (dropText && btnUploadSubmit && uploadFeedback) {
       uploadFeedback.textContent = '';
       uploadFeedback.className = 'upload-feedback';
 
-      if (file.size > MAX_FILE_SIZE) {
-        dropText.textContent = `File dipilih: ${file.name}`;
-        uploadFeedback.textContent = `Ukuran file terlalu besar (maksimal 4.5 MB). File Anda: ${(file.size / (1024 * 1024)).toFixed(2)} MB.`;
+      if (selectedFiles.length === 0) {
+        dropText.textContent = 'Klik atau Seret beberapa foto ke sini';
+        btnUploadSubmit.disabled = true;
+        if (btnUploadClear) btnUploadClear.style.display = 'none';
+        return;
+      }
+
+      if (btnUploadClear) btnUploadClear.style.display = 'inline-flex';
+
+      // Check if any file is too large
+      const oversizedFiles = selectedFiles.filter(f => f.size > MAX_FILE_SIZE);
+      if (oversizedFiles.length > 0) {
+        dropText.textContent = `${selectedFiles.length} file dipilih`;
+        uploadFeedback.textContent = `Ada ${oversizedFiles.length} file yang terlalu besar (maksimal 4.5 MB per file).`;
         uploadFeedback.className = 'upload-feedback error';
         btnUploadSubmit.disabled = true;
       } else {
-        dropText.textContent = `File dipilih: ${file.name} (${(file.size / (1024 * 1024)).toFixed(2)} MB)`;
+        const totalSize = selectedFiles.reduce((sum, f) => sum + f.size, 0);
+        const sizeInMb = (totalSize / (1024 * 1024)).toFixed(2);
+        dropText.textContent = `${selectedFiles.length} file dipilih (Total ${sizeInMb} MB)`;
         btnUploadSubmit.disabled = false;
       }
     }
+  }
+
+  // Handle Clear Selection
+  if (btnUploadClear) {
+    btnUploadClear.addEventListener('click', () => {
+      selectedFiles = [];
+      if (fileInput) fileInput.value = '';
+      updateFilesInfo();
+    });
   }
 
   // Handle Upload Submission
   if (uploadForm) {
     uploadForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      if (!fileInput.files || fileInput.files.length === 0) return;
+      if (selectedFiles.length === 0) return;
 
-      const file = fileInput.files[0];
-      if (file.size > MAX_FILE_SIZE) {
-        setUploadState('error', `Ukuran file terlalu besar (maksimal 4.5 MB).`);
+      const oversizedFiles = selectedFiles.filter(f => f.size > MAX_FILE_SIZE);
+      if (oversizedFiles.length > 0) {
+        setUploadState('error', `Terdapat file yang melebihi batas 4.5 MB.`);
         return;
       }
 
-      const formData = new FormData();
-      formData.append('file', file);
+      btnUploadSubmit.disabled = true;
+      let successCount = 0;
+      let failCount = 0;
 
-      setUploadState('loading', 'Mengunggah foto...');
+      for (let i = 0; i < selectedFiles.length; i++) {
+        const file = selectedFiles[i];
+        setUploadState('loading', `Mengunggah ${i + 1} dari ${selectedFiles.length}... (${file.name})`);
 
-      try {
-        const response = await fetch('/api/upload', {
-          method: 'POST',
-          body: formData
-        });
+        try {
+          const formData = new FormData();
+          formData.append('file', file);
 
-        const result = await response.json();
+          const response = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData
+          });
 
-        if (result.success) {
-          setUploadState('success', 'Foto berhasil diunggah! Memuat ulang...');
-          setTimeout(() => {
-            window.location.reload();
-          }, 1000);
-        } else {
-          setUploadState('error', result.message || 'Gagal mengunggah foto.');
+          const result = await response.json();
+          if (result.success) {
+            successCount++;
+          } else {
+            failCount++;
+            console.error(`Gagal mengunggah ${file.name}:`, result.message);
+          }
+        } catch (err) {
+          failCount++;
+          console.error(`Kesalahan koneksi saat mengunggah ${file.name}:`, err);
         }
-      } catch (err) {
-        setUploadState('error', 'Kesalahan koneksi saat mengunggah.');
       }
+
+      if (failCount === 0) {
+        setUploadState('success', `Berhasil mengunggah ${successCount} foto! Memuat ulang...`);
+      } else if (successCount > 0) {
+        setUploadState('error', `Berhasil ${successCount} foto, gagal ${failCount} foto. Memuat ulang...`);
+      } else {
+        setUploadState('error', `Gagal mengunggah semua foto.`);
+      }
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     });
   }
 
