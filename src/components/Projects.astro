@@ -2,26 +2,35 @@
 const projects = [
   {
     num: '01',
-    title: 'SMASHBOOK PRO',
-    desc: 'Simulasi dashboard forum diskusi developer yang menyertakan interaktivitas state, dynamic styling, dan sidebar navigasi yang kompleks.',
-    tags: ['ASTROJS', 'TYPESCRIPT', 'CSS GRID'],
-    demo: 'https://badminton-booking-chi.vercel.app/',
-    code: '#'
+    title: 'BUKU PEJABAT KEMENTERIAN LUAR NEGERI',
+    desc: 'Buku digital berisi profil, kontak, dan informasi jabatan para pejabat di lingkungan Kementerian Luar Negeri.',
+    tags: ['REACTJS', 'LARAVEL', 'MYSQL'],
+    demo: '#',
+    code: '#',
+    status: 'wip'
   },
   {
     num: '02',
     title: 'SURVEI KEPUASAN MASYARAKAT DUKCAPIL KOTA SEMARANG [REWORKED]',
     desc: 'Desain ulang sistem survei kepuasan masyarakat dukcapil kota semarang berbasis web dan android native.',
-    tags: ['JAVASCRIPT', 'VANILLA CSS', 'LOCAL STORAGE'],
-    demo: '#',
+    tags: ['NEXTJS', 'TYPESCRIPT', 'TAILWIND CSS', 'SUPABASE', 'RECHARTS'],
+    demo: 'https://skm-rework.vercel.app/',
     code: '#'
   },
   {
     num: '03',
-    title: 'PERSONAL PORTFOLIO V1',
-    desc: 'Website portofolio awal yang dibuat menggunakan Next.js App Router dan Tailwind CSS untuk melatih penataan layout modular React.',
-    tags: ['NEXTJS', 'REACT', 'TAILWIND CSS'],
-    demo: '#',
+    title: 'SURVEI KEPUASAN MASYARAKAT DUKCAPIL KOTA SEMARANG [OLD VERSION]',
+    desc: 'sistem survei kepuasan masyarakat dukcapil kota semarang berbasis website.',
+    tags: ['FLASK', 'VANILLA CSS', 'JQUERY', 'MONGODB', 'CHARTJS'],
+    demo: '#https://skm-dukcapil-semarang.vercel.app/',
+    code: '#'
+  },
+  {
+    num: '04',
+    title: 'SMASHBOOK PRO',
+    desc: 'Simulasi dashboard forum diskusi developer yang menyertakan interaktivitas state, dynamic styling, dan sidebar navigasi yang kompleks.',
+    tags: ['NEXTJS', 'TYPESCRIPT', 'SUPABASE'],
+    demo: 'https://badminton-booking-chi.vercel.app/',
     code: '#'
   }
 ];
@@ -53,7 +62,10 @@ const projects = [
               
               <!-- Title, Description & Tags -->
               <div class="project-details">
-                <h3 class="project-row-title">{project.title}</h3>
+                <h3 class="project-row-title">
+                  {project.title}
+                  {project.status === 'wip' && <span class="wip-badge">WIP</span>}
+                </h3>
                 <p class="project-row-desc">{project.desc}</p>
                 
                 <div class="project-row-tags">
@@ -66,17 +78,20 @@ const projects = [
 
             <!-- Right-Aligned Action Links -->
             <div class="project-row-actions">
-              <a href={project.demo} class="brutalist-btn inline-btn-row" target="_blank" rel="noopener noreferrer">
-                <span>VIEW SITE</span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                  <polyline points="15 3 21 3 21 9"></polyline>
-                  <line x1="10" y1="14" x2="21" y2="3"></line>
-                </svg>
-              </a>
-              {/* <a href={project.code} class="brutalist-btn inline-btn-row secondary" target="_blank" rel="noopener noreferrer">
-                <span>GITHUB</span>
-              </a> */}
+              {project.status === 'wip' ? (
+                <div class="brutalist-btn inline-btn-row wip-btn-disabled" title="Proyek sedang dalam pengerjaan">
+                  <span>COMING SOON</span>
+                </div>
+              ) : (
+                <a href={project.demo} class="brutalist-btn inline-btn-row" target="_blank" rel="noopener noreferrer">
+                  <span>VIEW SITE</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                </a>
+              )}
             </div>
           </div>
         </div>
@@ -227,6 +242,7 @@ const projects = [
     gap: 0.8rem;
     align-items: flex-start;
     flex-wrap: wrap;
+    flex-shrink: 0; /* Prevent shrinking */
   }
 
   .inline-btn-row {
@@ -234,6 +250,8 @@ const projects = [
     padding: 0.55rem 1.1rem;
     border-radius: 0;
     box-shadow: 2px 2px 0px var(--color-border);
+    flex-shrink: 0; /* Prevent shrinking */
+    white-space: nowrap; /* Prevent text wrapping */
   }
 
   .inline-btn-row:hover {
@@ -254,6 +272,30 @@ const projects = [
     background-color: transparent;
     color: var(--text-primary);
     text-decoration: underline;
+  }
+
+  .wip-badge {
+    font-family: var(--font-subheading);
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 0.15rem 0.5rem;
+    border: 1px solid var(--color-border);
+    background-color: var(--text-primary);
+    color: var(--bg-primary);
+    margin-left: 0.8rem;
+    vertical-align: middle;
+    display: inline-block;
+    letter-spacing: 0.05em;
+  }
+
+  .wip-btn-disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    background-color: transparent;
+    box-shadow: none !important;
+    transform: none !important;
+    color: var(--text-muted);
+    border-style: dashed;
   }
 
   /* Responsive screen sizing */
