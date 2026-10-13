@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap');
-
 /* --- PREMIUM HYBRID SAGE GLASS-BRUTALISM TOKENS --- */
 :root {
   /* Fonts */
@@ -14,7 +12,7 @@
   
   --text-primary: #121c15;
   --text-secondary: #24352a;
-  --text-muted: #4e5f53;
+  --text-muted: #3d4f42;
   
   --color-border: #121c15;
   --color-primary: #121c15;
@@ -40,7 +38,7 @@
   
   --text-primary: #b4c6b8;
   --text-secondary: #9cb0a1;
-  --text-muted: #677b6d;
+  --text-muted: #5a6f5e;
   
   --color-border: #b4c6b8;
   --color-primary: #b4c6b8;
@@ -274,6 +272,37 @@ section {
 
 section:last-of-type {
   border-bottom: none;
+}
+
+/* --- ACCESSIBILITY UTILITIES --- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  padding: 0.75rem 1.25rem;
+  background-color: var(--text-primary);
+  color: var(--bg-primary);
+  font-family: var(--font-subheading);
+  font-weight: 700;
+  font-size: 0.9rem;
+  z-index: 100000;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 1rem;
 }
 
 /* --- SCROLL REVEAL (PREMIUM FLUID SLIDE) --- */
