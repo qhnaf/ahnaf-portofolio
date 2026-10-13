@@ -83,34 +83,8 @@ const {
     <!-- Global Footer -->
     <Footer />
 
-    <!-- Scroll Reveal Logic -->
-    <script>
-      const revealElements = document.querySelectorAll('.scroll-reveal');
-      let ticking = false;
-
-      const revealOnScroll = () => {
-        if (!ticking) {
-          window.requestAnimationFrame(() => {
-            for (let i = 0; i < revealElements.length; i++) {
-              const windowHeight = window.innerHeight;
-              const elementTop = revealElements[i].getBoundingClientRect().top;
-              const elementVisible = 80;
-
-              if (elementTop < windowHeight - elementVisible) {
-                revealElements[i].classList.add('active');
-              }
-            }
-            ticking = false;
-          });
-          ticking = true;
-        }
-      };
-
-      // Run on page load
-      window.addEventListener('load', revealOnScroll);
-      // Run on scroll
-      window.addEventListener('scroll', revealOnScroll, { passive: true });
-    </script>
+    <!-- Scroll Reveal Logic (deferred) -->
+    <script src="/js/main.js" defer></script>
     <noscript>
       <style>
         .scroll-reveal {
