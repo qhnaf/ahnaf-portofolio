@@ -23,7 +23,14 @@ const {
     <link rel="icon" type="image/png" href="/favicon.png?v=1.2" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
-    
+
+    <!-- Google Fonts (preconnect + preload for performance) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" /></noscript>
+
     <!-- Primary Meta Tags -->
     <title>{title}</title>
     <meta name="title" content={title} />
@@ -33,13 +40,13 @@ const {
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content="/og-image.png" />
+    <meta property="og:image" content="/og-image.svg" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content="/og-image.png" />
+    <meta property="twitter:image" content="/og-image.svg" />
 
     <!-- Theme Inline Script to avoid page flashing -->
     <script is:inline>
@@ -62,11 +69,14 @@ const {
     </script>
   </head>
   <body>
+    <!-- Skip to content link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
     <!-- Global Header -->
     {!hideHeader && <Header />}
 
     <!-- Main Content -->
-    <main>
+    <main id="main-content">
       <slot />
     </main>
 
@@ -76,23 +86,38 @@ const {
     <!-- Scroll Reveal Logic -->
     <script>
       const revealElements = document.querySelectorAll('.scroll-reveal');
+      let ticking = false;
 
       const revealOnScroll = () => {
-        for (let i = 0; i < revealElements.length; i++) {
-          const windowHeight = window.innerHeight;
-          const elementTop = revealElements[i].getBoundingClientRect().top;
-          const elementVisible = 80;
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            for (let i = 0; i < revealElements.length; i++) {
+              const windowHeight = window.innerHeight;
+              const elementTop = revealElements[i].getBoundingClientRect().top;
+              const elementVisible = 80;
 
-          if (elementTop < windowHeight - elementVisible) {
-            revealElements[i].classList.add('active');
-          }
+              if (elementTop < windowHeight - elementVisible) {
+                revealElements[i].classList.add('active');
+              }
+            }
+            ticking = false;
+          });
+          ticking = true;
         }
       };
 
       // Run on page load
       window.addEventListener('load', revealOnScroll);
       // Run on scroll
-      window.addEventListener('scroll', revealOnScroll);
+      window.addEventListener('scroll', revealOnScroll, { passive: true });
     </script>
+    <noscript>
+      <style>
+        .scroll-reveal {
+          opacity: 1 !important;
+          transform: none !important;
+        }
+      </style>
+    </noscript>
   </body>
 </html>

@@ -1,4 +1,5 @@
 ---
+import { CV_URL } from '../config';
 ---
 
 <header class="main-header">
@@ -18,7 +19,7 @@
         <li><a href="#experience" class="nav-link">EXPERIENCE</a></li>
         <li><a href="#certifications" class="nav-link">CERTS</a></li>
         <li><a href="#contact" class="nav-link">CONTACT</a></li>
-        <li><a href="https://drive.google.com/file/d/1CcvSWZHPA5vYl28pjI5VRezbx73o117q/view?usp=sharing" class="nav-link" target="_blank" rel="noopener noreferrer">CV</a></li>
+        <li><a href={CV_URL} class="nav-link" target="_blank" rel="noopener noreferrer">CV</a></li>
       </ul>
     </nav>
 
@@ -50,7 +51,7 @@
       <li><a href="#experience" class="mobile-link">EXPERIENCE</a></li>
       <li><a href="#certifications" class="mobile-link">CERTIFICATIONS</a></li>
       <li><a href="#contact" class="mobile-link">CONTACT</a></li>
-      <li><a href="https://drive.google.com/file/d/1CcvSWZHPA5vYl28pjI5VRezbx73o117q/view?usp=sharing" class="mobile-link" target="_blank" rel="noopener noreferrer">VIEW CV</a></li>
+      <li><a href={CV_URL} class="mobile-link" target="_blank" rel="noopener noreferrer">VIEW CV</a></li>
     </ul>
   </nav>
 </div>
@@ -351,36 +352,53 @@
 
   // Sticky header scrolled state
   const header = document.querySelector('.main-header');
+  let headerTicking = false;
+
   const handleScrollHeader = () => {
-    if (window.scrollY > 20) {
-      header?.classList.add('scrolled');
-    } else {
-      header?.classList.remove('scrolled');
+    if (!headerTicking) {
+      window.requestAnimationFrame(() => {
+        if (window.scrollY > 20) {
+          header?.classList.add('scrolled');
+        } else {
+          header?.classList.remove('scrolled');
+        }
+        headerTicking = false;
+      });
+      headerTicking = true;
     }
   };
-  window.addEventListener('scroll', handleScrollHeader);
+  window.addEventListener('scroll', handleScrollHeader, { passive: true });
   handleScrollHeader(); // Run once in case already scrolled
 
   // Active link check
   const sections = document.querySelectorAll('section');
   const navLinks = document.querySelectorAll('.nav-link');
+  let navTicking = false;
 
-  window.addEventListener('scroll', () => {
-    let current = '';
-    
-    sections.forEach(section => {
-      const sectionTop = (section as HTMLElement).offsetTop;
-      if (window.scrollY >= (sectionTop - 120)) {
-        current = section.getAttribute('id') || '';
-      }
-    });
+  const handleNavHighlight = () => {
+    if (!navTicking) {
+      window.requestAnimationFrame(() => {
+        let current = '';
 
-    navLinks.forEach(link => {
-      link.classList.remove('active');
-      const href = link.getAttribute('href');
-      if (href === `#${current}`) {
-        link.classList.add('active');
-      }
-    });
-  });
+        sections.forEach(section => {
+          const sectionTop = (section as HTMLElement).offsetTop;
+          if (window.scrollY >= (sectionTop - 120)) {
+            current = section.getAttribute('id') || '';
+          }
+        });
+
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          const href = link.getAttribute('href');
+          if (href === `#${current}`) {
+            link.classList.add('active');
+          }
+        });
+        navTicking = false;
+      });
+      navTicking = true;
+    }
+  };
+  window.addEventListener('scroll', handleNavHighlight, { passive: true });
+  handleNavHighlight();
 </script>
