@@ -13,6 +13,9 @@
   --text-primary: #121c15;
   --text-secondary: #24352a;
   --text-muted: #3d4f42;
+
+  /* Smooth scrolling */
+  scroll-behavior: smooth;
   
   --color-border: #121c15;
   --color-primary: #121c15;
@@ -308,11 +311,19 @@ section:last-of-type {
 /* --- SCROLL REVEAL (PREMIUM FLUID SLIDE) --- */
 .scroll-reveal {
   opacity: 0;
-  transform: translateY(25px);
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(30px) scale(0.98);
+  transition:
+    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.9s cubic-bezier(0.16, 1, 0.3,  1);
+  will-change: opacity, transform;
 }
 
 .scroll-reveal.active {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
+}
+
+.scroll-reveal.active:hover {
+  transform: translateY(-2px) scale(1.01);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }

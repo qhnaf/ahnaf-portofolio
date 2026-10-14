@@ -1,7 +1,61 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <rect width="1200" height="630" fill="#b4c6b8"/>
-  <rect x="40" y="40" width="1120" height="550" fill="none" stroke="#121c15" stroke-width="3"/>
-  <text x="600" y="280" font-family="Arial, sans-serif" font-size="72" font-weight="700" fill="#121c15" text-anchor="middle">AHNAF BHAMAKERTI ARIEF</text>
-  <text x="600" y="360" font-family="Arial, sans-serif" font-size="36" fill="#24352a" text-anchor="middle">Web Developer</text>
-  <text x="600" y="430" font-family="Arial, sans-serif" font-size="24" fill="#4e5f53" text-anchor="middle">Portfolio</text>
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#d4e4d8"/>
+      <stop offset="100%" style="stop-color:#8fae94"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#2d5a3f"/>
+      <stop offset="100%" style="stop-color:#1a3d28"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="20" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGrad)"/>
+
+  <!-- Decorative geometric shapes -->
+  <circle cx="1050" cy="120" r="180" fill="none" stroke="#1a3d28" stroke-width="2" opacity="0.15"/>
+  <circle cx="1050" cy="120" r="120" fill="none" stroke="#1a3d28" stroke-width="2" opacity="0.2"/>
+  <rect x="80" y="480" width="200" height="200" fill="none" stroke="#1a3d28" stroke-width="2" opacity="0.1" transform="rotate(45 180 580)"/>
+
+  <!-- Left accent bar -->
+  <rect x="0" y="0" width="12" height="630" fill="url(#accentGrad)"/>
+
+  <!-- Main content area -->
+  <text x="80" y="200" font-family="'Space Grotesk', 'Arial', sans-serif" font-size="28" font-weight="500" fill="#2d5a3f" letter-spacing="4">HELLO, I'M</text>
+
+  <text x="80" y="310" font-family="'Space Grotesk', 'Arial', sans-serif" font-size="80" font-weight="700" fill="#121c15">AHNAF</text>
+  <text x="80" y="400" font-family="'Space Grotesk', 'Arial', sans-serif" font-size="80" font-weight="700" fill="#2d5a3f">BHAMAKERTI</text>
+  <text x="80" y="490" font-family="'Space Grotesk', 'Arial', sans-serif" font-size="80" font-weight="700" fill="#121c15">ARIEF</text>
+
+  <!-- Subtitle with accent -->
+  <rect x="80" y="530" width="60" height="6" fill="url(#accentGrad)"/>
+  <text x="160" y="545" font-family="'Plus Jakarta Sans', 'Arial', sans-serif" font-size="32" font-weight="500" fill="#24352a">Full-Stack Web Developer</text>
+
+  <!-- Right side: code-inspired decoration -->
+  <g opacity="0.12" font-family="'Courier New', monospace" font-size="16" fill="#1a3d28">
+    <text x="820" y="180">const developer = {</text>
+    <text x="840" y="210">name: "Ahnaf",</text>
+    <text x="840" y="240">role: "Full-Stack Dev",</text>
+    <text x="840" y="270">stack: [</text>
+    <text x="860" y="300">"Laravel",</text>
+    <text x="860" y="330">"React",</text>
+    <text x="860" y="360">"Astro",</text>
+    <text x="860" y="390">"Tailwind"</text>
+    <text x="840" y="420">],</text>
+    <text x="840" y="450">passion: "Building",</text>
+    <text x="840" y="480>"web experiences"</text>
+    <text x="820" y="510">};</text>
+  </g>
+
+  <!-- Bottom right badge -->
+  <rect x="980" y="500" width="180" height="50" rx="25" fill="#121c15"/>
+  <text x="1070" y="533" font-family="'Plus Jakarta Sans', 'Arial', sans-serif" font-size="20" font-weight="600" fill="#d4e4d8" text-anchor="middle">PORTFOLIO</text>
 </svg>

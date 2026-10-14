@@ -1,25 +1,25 @@
 document.addEventListener('DOMContentLoaded', () => {
   const revealElements = document.querySelectorAll('.scroll-reveal');
-  let ticking = false;
 
-  const revealOnScroll = () => {
-    if (!ticking) {
-      window.requestAnimationFrame(() => {
-        for (let i = 0; i < revealElements.length; i++) {
-          const windowHeight = window.innerHeight;
-          const elementTop = revealElements[i].getBoundingClientRect().top;
-          const elementVisible = 80;
+  if (!('IntersectionObserver' in window)) {
+    revealElements.forEach((el) => el.classList.add('active'));
+    return;
+  }
 
-          if (elementTop < windowHeight - elementVisible) {
-            revealElements[i].classList.add('active');
-          }
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          observer.unobserve(entry.target);
         }
-        ticking = false;
       });
-      ticking = true;
+    },
+    {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px',
     }
-  };
+  );
 
-  window.addEventListener('load', revealOnScroll);
-  window.addEventListener('scroll', revealOnScroll, { passive: true });
+  revealElements.forEach((el) => observer.observe(el));
 });
